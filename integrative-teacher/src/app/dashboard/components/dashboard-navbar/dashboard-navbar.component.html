@@ -1,0 +1,82 @@
+<ng-container>
+    <nav class="sidebar">
+      <ng-container>
+        <a
+          class="sidebar--item"
+          [routerLink]="['/dashboard', 'home']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Inicio"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="home"></i-feather>
+          </div>
+<!--          <span class="item&#45;&#45;text"> Inicio </span>-->
+        </a>
+      </ng-container>
+
+      <!-- planning -->
+      <ng-container>
+        <a
+          class="sidebar--item"
+          data-tooltip="Planificación"
+          [routerLink]="['/dashboard', 'planning']"
+          routerLinkActive="active"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="layout"></i-feather>
+          </div>
+<!--          <span class="item&#45;&#45;text"> Planificación </span>-->
+        </a>
+      </ng-container>
+
+      <!-- activities -->
+      <ng-container>
+        <a
+          class="sidebar--item"
+          data-tooltip="Actividades"
+          [routerLink]="['/dashboard', 'activities']"
+          routerLinkActive="active"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="activity"></i-feather>
+          </div>
+<!--          <span class="item&#45;&#45;text"> Actividades </span>-->
+        </a>
+      </ng-container>
+
+      <!-- analytics -->
+      <ng-container>
+        <a
+          class="sidebar--item"
+          data-tooltip="Analíticas"
+          [routerLink]="['/dashboard', 'analytics']"
+          routerLinkActive="active"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="pie-chart"></i-feather>
+          </div>
+<!--          <span class="item&#45;&#45;text"> Analíticas </span>-->
+        </a>
+      </ng-container>
+
+      <!-- upload -->
+      <ng-container>
+        <a
+          class="sidebar--item"
+          data-tooltip="Subir información"
+          [routerLink]="['/dashboard', 'upload']"
+          routerLinkActive="active"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="upload"></i-feather>
+          </div>
+<!--          <span class="item&#45;&#45;text"> Subir información </span>-->
+        </a>
+      </ng-container>
+
+    </nav>
+</ng-container>
