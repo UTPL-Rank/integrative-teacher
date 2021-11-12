@@ -1,1 +1,196 @@
-<p>plannig-form works!</p>
+<!-- header  -->
+<div class="container card mt-3 pt-3">
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <img src="assets/images/logo_vicerrectorado_academico.jpg" class="img-fluid logo">
+    </div>
+  </div>
+
+  <div class="row card-body">
+    <h2 class="section-title" align="center"> Planificación Docente Integrador </h2>
+  </div>
+
+  <div class="col-md-offset-1 col-sm-12">
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Datos del Docente Integrador</a>
+      </li>
+    </ul>
+
+    <table class="table table-hover">
+      <tbody>
+      <tr>
+        <th scope="row">Docente Integrador</th>
+        <td>Jorge López</td>
+      </tr>
+      <tr>
+        <th scope="row">Facultad</th>
+        <td>Facultad de Ingenierías y Arquitectura</td>
+      </tr>
+      <tr>
+        <th scope="row">Carrera</th>
+        <td>Ciencias de la Computación</td>
+      </tr>
+      <tr>
+        <th scope="row">Periodo Académico</th>
+        <td>Octubre 2021 - Febrero 2022</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--teachers-->
+
+<div class="container card mt-3 pt-3 pb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page">Datos de los docentes de Primer Ciclo</a>
+    </li>
+  </ul>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Nombre del Docente</th>
+      <th scope="col">Materia</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Audrey Romero</td>
+      <td>Prácticum</td>
+      <td style="width: 10%">
+        <i-feather name="edit"></i-feather>
+      </td>
+      <td style="width: 10%">
+        <i-feather name="delete"></i-feather>
+      </td>
+    </tr>
+    <tr>
+      <td>Armando Cabrera</td>
+      <td>Arquitectura Empresarial</td>
+      <td style="width: 10%">
+        <i-feather name="edit"></i-feather>
+      </td>
+      <td style="width: 10%">
+        <i-feather name="delete"></i-feather>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <hr>
+  <form>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Nombre</label>
+      <input type="text" class="form-control" placeholder="Nombre del docente" aria-label="Nombre del docente"
+             aria-describedby="basic-addon2">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Materia</label>
+      <input type="text" class="form-control" placeholder="Nombre de la Materia" aria-label="Nombre de la Materia"
+             aria-describedby="basic-addon2">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Agregar</button>
+  </form>
+</div>
+
+<!--activities-->
+
+<div class="container card mt-3 pt-3 pb-3 mb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page">Actividades</a>
+    </li>
+  </ul>
+  <div class="col-md-offset-1 col-sm-12">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Actividad</th>
+          <th scope="col">Objetivo Actividad</th>
+          <th scope="col">Fecha Inicio</th>
+          <th scope="col">Fecha Fin</th>
+          <th scope="col">Evidencia a Entregar</th>
+          <th scope="col">Indicador de Medición</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Reunión con los estudiantes</td>
+          <td>Dar a conocer el proyecto Docente Integrador</td>
+          <td>12-11-2021</td>
+          <td>19-11-2021</td>
+          <td>Capturas de pantalla de la actividad realizada mediante la plataforma Zoom</td>
+          <td>Asistencia de los estudiantes</td>
+<!--          <td style="width: 10%"><a class="btn btn-success"><img class="icono_pen"-->
+<!--                                                                 src="https://scontent.fcue10-1.fna.fbcdn.net/v/t1.15752-9/255639341_637461420609087_6736679915282103228_n.png?_nc_cat=105&ccb=1-5&_nc_sid=ae9488&_nc_ohc=iYNF-mo99hMAX_2qjXy&_nc_ht=scontent.fcue10-1.fna&oh=c02b85f12bc8eadbc8bac4e6fafedb63&oe=61B12B0D"-->
+<!--                                                                 width="50%"></a>-->
+<!--          </td>-->
+<!--          <td style="width: 10%"><a class="btn btn-danger"><img class="icono_pen"-->
+<!--                                                                src="https://scontent.fcue10-1.fna.fbcdn.net/v/t1.15752-9/254115820_2664052547235420_8906283378605711020_n.png?_nc_cat=108&ccb=1-5&_nc_sid=ae9488&_nc_ohc=JqfyXbT7NsUAX84mqr3&_nc_ht=scontent.fcue10-1.fna&oh=5e17bce41795609866419c43db04967a&oe=61B1FEBE"-->
+<!--                                                                width="50%"></a>-->
+<!--          </td>-->
+          <td style="width: 10%">
+            <i-feather name="edit"></i-feather>
+          </td>
+          <td style="width: 10%">
+            <i-feather name="delete"></i-feather>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <form>
+      <div class="mb-3">
+        <label for="validationTextarea" class="form-label">Actividad</label>
+        <textarea class="form-control" id="validationTextarea"
+                  placeholder="Porfavor ingrese la actividad correspondiente."></textarea>
+        <div class="invalid-feedback">
+          Porfavor ingrese la actividad correspondiente.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="validationTextarea" class="form-label">Objetivo Actividad</label>
+        <textarea class="form-control" id="validationTextarea"
+                  placeholder="Porfavor ingrese el objetivo de la actividad correspondiente."></textarea>
+      </div>
+      <div class="row mb-3">
+        <div class="col-6">
+          <div class="position-relative">
+            <label for="validationTooltip01" class="form-label">Fecha Inicio</label>
+            <input type='date' id='Fecha' name='Fecha' class='form-control' placeholder='Fecha de Inicio (yy-mm-dd)'
+                   required=''>
+          </div>
+          <br>
+        </div>
+        <div class="col-6">
+          <div class="position-relative">
+            <label for="validationTooltip02" class="form-label">Fecha Fin</label>
+            <input type='date' id='Fecha2' name='Fecha2' class='form-control' placeholder='Fecha de Fin (yy-mm-dd)'
+                   required=''>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Evidencia a entregar</label>
+        <textarea class="form-control" id="validationTextarea"
+                  placeholder="Porfavor ingrese evidencias de la actividad correspondiente."></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Indicador de medición</label>
+        <textarea class="form-control" id="validationTextarea"
+                  placeholder="Porfavor ingrese indicadores de la actividad correspondiente."></textarea>
+
+      </div>
+      <br>
+    </form>
+    <button type="submit" class="btn btn-primary">Agregar</button>
+  </div>
+</div>
+
