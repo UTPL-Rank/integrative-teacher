@@ -127,6 +127,16 @@
               "devServerTarget": "integrative-teacher:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "integrative-teacher:build:production",
+            "firebaseProject": "sgintegrador",
+            "firebaseHostingSite": "sgintegrador"
+          }
         }
       }
     }
