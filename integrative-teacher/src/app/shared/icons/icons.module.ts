@@ -18,7 +18,9 @@ import {
   Grid,
   Menu,
   Database,
-  Layout
+  Layout,
+  Edit,
+  Delete
 } from 'angular-feather/icons';
 
 // Check all icons available: https://github.com/michaelbazos/angular-feather
@@ -42,7 +44,9 @@ const icons = {
   Grid,
   Menu,
   Database,
-  Layout
+  Layout,
+  Edit,
+  Delete
 };
 
 @NgModule({
