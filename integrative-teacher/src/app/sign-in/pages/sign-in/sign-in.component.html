@@ -3,11 +3,11 @@
     Iniciar sesión.
   </h1>
   
-  <form [formGroup]="formLogin" (ngSubmit)="login()" class="d-flex flex-column">
+  <form [formGroup]="signInForm" (ngSubmit)="login()" class="d-flex flex-column">
     <!-- Input group -->
     <div class="input-group mb-3">
       <!-- UTPL username -->
-      <input formControlName="user" 
+      <input formControlName="username" 
         [ngClass]="{'is-valid': usernameControl.valid, 'is-invalid': usernameControl.invalid && usernameControl.touched}"
         type="text" class="form-control" placeholder="Usuario UTPL" aria-label="Usuario UTPL" aria-describedby=""
         name="username">
