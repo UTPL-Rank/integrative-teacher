@@ -27,10 +27,11 @@
     "feather-icons": "^4.28.0",
     "firebase": "^8.6.7",
     "firebase-admin": "^9.11.0",
+    "ngx-doc-viewer": "^2.0.5",
+    "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.2",
-    "rxfire": "^6.0.0"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1001.7",
