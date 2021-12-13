@@ -3,5 +3,6 @@ export interface IntegrativeTeacher {
   displayName: string;
   faculty: string;
   career: string;
+  cycle: string;
   academicPeriod: string;
 }
