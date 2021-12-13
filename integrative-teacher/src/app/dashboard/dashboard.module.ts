@@ -14,13 +14,11 @@ const COMPONENTS = [
   DashboardTopbarComponent,
   LoadingBarComponent,
   ];
-
 // Pages
 const PAGES = [
   DashboardShellComponent,
   DashboardHomeComponent,
 ];
-
 @NgModule({
   declarations: [
     PAGES, COMPONENTS
