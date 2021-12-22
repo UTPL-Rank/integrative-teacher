@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlannigFormComponent } from './plannig-form.component';
+import { ActivityDetailComponent } from './activity-detail.component';
 
-describe('PlannigFormComponent', () => {
-  let component: PlannigFormComponent;
-  let fixture: ComponentFixture<PlannigFormComponent>;
+describe('ActivityDetailComponent', () => {
+  let component: ActivityDetailComponent;
+  let fixture: ComponentFixture<ActivityDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlannigFormComponent ]
+      declarations: [ ActivityDetailComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlannigFormComponent);
+    fixture = TestBed.createComponent(ActivityDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
