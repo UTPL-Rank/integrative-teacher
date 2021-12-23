@@ -20,7 +20,9 @@ import {
   Database,
   Layout,
   Edit,
-  Delete
+  Delete,
+  ExternalLink,
+  Trash2
 } from 'angular-feather/icons';
 
 // Check all icons available: https://github.com/michaelbazos/angular-feather
@@ -46,7 +48,9 @@ const icons = {
   Database,
   Layout,
   Edit,
-  Delete
+  Delete,
+  ExternalLink,
+  Trash2
 };
 
 @NgModule({
