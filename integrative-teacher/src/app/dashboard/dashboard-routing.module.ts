@@ -12,6 +12,11 @@ const routes: Routes = [
         path: 'home',
         component: DashboardHomeComponent
       },
+      { path: 'documents', loadChildren: () => import('../documents/documents.module').then(m => m.DocumentsModule) },
+      { path: 'planning', loadChildren: () => import('../planning/planning.module').then(m => m.PlanningModule) },
+      { path: 'activities', loadChildren: () => import('../activities/activities.module').then(m => m.ActivitiesModule) },
+      { path: 'analytics', loadChildren: () => import('../analytics/analytics.module').then(m => m.AnalyticsModule) },
+      { path: 'upload', loadChildren: () => import('../upload/upload.module').then(m => m.UploadModule) },
     ]
   },
   {

@@ -1,0 +1,345 @@
+<!-- editing  -->
+<div class="container alert alert-info mt-3 pt-3 mb-1 pb-1">
+  <div class="row">
+    <div class="col-10 text-end">
+      <p class="fst-italic">Editar planificación</p>
+    </div>
+    <div class="col-1 align-content-end">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="editPlannig"
+               (change)="changeEditPlanning($event)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- header  -->
+<div class="container card mt-3 pt-3">
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <img src="assets/images/logo_vicerrectorado_academico.jpg" class="img-fluid logo">
+    </div>
+  </div>
+
+  <div class="row card-body">
+    <h3 class="section-title" align="center"> Planificación Docente Integrador </h3>
+  </div>
+
+  <div class="col-md-offset-1 col-sm-12">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Datos del Docente Integrador</a>
+      </li>
+    </ul>
+    <table class="table table-hover">
+      <tbody>
+      <tr>
+        <th scope="row">Docente Integrador</th>
+        <td>Jorge López</td>
+      </tr>
+      <tr>
+        <th scope="row">Facultad</th>
+        <td>Facultad de Ingenierías y Arquitectura</td>
+      </tr>
+      <tr>
+        <th scope="row">Carrera</th>
+        <td>Ciencias de la Computación</td>
+      </tr>
+      <tr>
+        <th scope="row">Periodo Académico</th>
+        <td>Octubre 2021 - Febrero 2022</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--teachers-->
+<div class="container card mt-3 pt-3 pb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page">Datos de los docentes de Primer Ciclo</a>
+    </li>
+  </ul>
+
+  <ng-container *ngIf="teachers.length > 0 else teachersIsEmpty">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">Nombre del Docente</th>
+        <th scope="col">Materia</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let teacher of teachers">
+        <td> {{ teacher.displayName }} </td>
+        <td> {{ teacher.subject }} </td>
+        <td style="width: 10%" *ngIf="editPlanning">
+          <a style="color: darkgreen" (click)="editTeacher(teacher)"><i-feather name="edit"></i-feather></a>
+        </td>
+        <td style="width: 10%" *ngIf="editPlanning">
+          <a style="color: darkred" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i-feather name="delete"></i-feather>
+          </a>
+          <!-- Modal -->
+          <ng-container>
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar docente <b> {{ teacher.displayName }} </b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                      <i>Esta acción no se puede deshacer</i>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                            (click)="deleteTeacher(teacher.id)">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-template #teachersIsEmpty>
+    <br><br>
+    <div class="card card-body text-center alert alert-info">
+      <p><i>Aún no has agregado ningún docente</i></p>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="editPlanning">
+    <form [formGroup]="teacherForm" [ngClass]="{ 'was-validated': teacherFormIsValid }" (ngSubmit)="saveTeacher()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre del docente</label>
+        <input type="text" class="form-control" aria-label="Nombre del docente"
+               aria-describedby="basic-addon2" id="name" formControlName="name"
+               [class.valid]="teacherForm.get('name')?.valid && (teacherForm.get('name')?.dirty || teacherForm.get('name')?.touched)"
+               [class.invalid]="teacherForm.get('name')?.invalid && (teacherForm.get('name')?.dirty || teacherForm.get('name')?.touched)"
+        >
+        <div *ngIf="teacherForm.get('name')?.invalid && teacherForm.get('name')?.errors &&
+        (teacherForm.get('name')?.dirty || teacherForm.get('name')?.touched)">
+          <small class="text-danger" *ngIf="teacherForm.get('name')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="subject" class="form-label">Materia</label>
+        <input type="text" class="form-control" aria-label="Nombre de la Materia"
+               aria-describedby="basic-addon2" id="subject" formControlName="subject"
+               [class.valid]="teacherForm.get('subject')?.valid && (teacherForm.get('subject')?.dirty || teacherForm.get('subject')?.touched)"
+               [class.invalid]="teacherForm.get('subject')?.invalid && (teacherForm.get('subject')?.dirty || teacherForm.get('subject')?.touched)"
+        >
+        <div *ngIf="teacherForm.get('subject')?.invalid && teacherForm.get('subject')?.errors &&
+        (teacherForm.get('subject')?.dirty || teacherForm.get('subject')?.touched)">
+          <small class="text-danger" *ngIf="teacherForm.get('subject')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      <br>
+      <ng-container *ngIf="!editATeacher">
+        <button type="submit" class="btn btn-primary" [disabled]="!teacherIsValid">Agregar docente</button>
+      </ng-container>
+      <ng-container *ngIf="editATeacher">
+        <button type="submit" class="btn btn-primary" [disabled]="!teacherIsValid">Editar docente</button>
+      </ng-container>
+    </form>
+  </ng-container>
+</div>
+
+<!--activities-->
+<div class="container card mt-3 pt-3 pb-3 mb-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page">Actividades</a>
+    </li>
+  </ul>
+
+  <ng-container *ngIf="activities.length > 0 else activitiesIsEmpty">
+    <div class="col-md-offset-1 col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col">Actividad</th>
+            <th scope="col">Objetivo Actividad</th>
+            <th scope="col">Fecha Inicio</th>
+            <th scope="col">Fecha Fin</th>
+            <th scope="col">Evidencia a Entregar</th>
+            <th scope="col">Indicador de Medición</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let activity of activities">
+            <td> {{ activity.description }} </td>
+            <td> {{ activity.goal }} </td>
+            <td> {{ activity.startDate }} </td>
+            <td> {{ activity.endDate }} </td>
+            <td> {{ activity.evidence }} </td>
+            <td> {{ activity.indicator }} </td>
+            <td style="width: 10%" *ngIf="editPlanning">
+              <a style="color: darkgreen" (click)="editActivity(activity)"><i-feather name="edit"></i-feather></a>
+            </td>
+            <td style="width: 10%" *ngIf="editPlanning">
+              <a style="color: darkred" type="button" data-bs-toggle="modal" data-bs-target="#deleteActivityModal">
+                <i-feather name="delete"></i-feather>
+              </a>
+              <!-- Modal -->
+              <ng-container>
+                <div class="modal fade" id="deleteActivityModal" tabindex="-1" aria-labelledby="deleteActivityModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteActivityModalLabel">Eliminar actividad <b> {{ activity.description }} </b></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="alert alert-danger" role="alert">
+                          <i>Esta acción no se puede deshacer</i>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                (click)="deleteActivity(activity.id)">Eliminar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #activitiesIsEmpty>
+    <br><br>
+    <div class="card card-body text-center alert alert-info">
+      <p><i>Aún no has agregado ninguna actividad</i></p>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="editPlanning">
+    <form [formGroup]="activityForm" [ngClass]="{ 'was-validated': activityFormIsValid }" (ngSubmit)="saveActivity()">
+      <div class="mb-3">
+        <label for="description" class="form-label">Actividad</label>
+        <textarea class="form-control" id="description"
+                  formControlName="description"
+                  [class.valid]="activityForm.get('description')?.valid && (activityForm.get('description')?.dirty || activityForm.get('description')?.touched)"
+                  [class.invalid]="activityForm.get('description')?.invalid && (activityForm.get('description')?.dirty || activityForm.get('description')?.touched)"
+        ></textarea>
+        <div *ngIf="activityForm.get('description')?.invalid && activityForm.get('description')?.errors &&
+        (activityForm.get('description')?.dirty || activityForm.get('description')?.touched)">
+          <small class="text-danger" *ngIf="activityForm.get('description')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="goal" class="form-label">Objetivo Actividad</label>
+        <textarea class="form-control" id="goal" formControlName="goal"
+                  [class.valid]="activityForm.get('goal')?.valid && (activityForm.get('goal')?.dirty || activityForm.get('goal')?.touched)"
+                  [class.invalid]="activityForm.get('goal')?.invalid && (activityForm.get('goal')?.dirty || activityForm.get('goal')?.touched)"
+        ></textarea>
+        <div *ngIf="activityForm.get('goal')?.invalid && activityForm.get('goal')?.errors &&
+        (activityForm.get('goal')?.dirty || activityForm.get('goal')?.touched)">
+          <small class="text-danger" *ngIf="activityForm.get('goal')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-6">
+          <div class="position-relative">
+            <label for="startDate" class="form-label">Fecha de inicio</label>
+            <input type='date' id='startDate' class='form-control' formControlName="startDate"
+                   [class.valid]="activityForm.get('startDate')?.valid && (activityForm.get('startDate')?.dirty || activityForm.get('startDate')?.touched)"
+                   [class.invalid]="activityForm.get('startDate')?.invalid && (activityForm.get('startDate')?.dirty || activityForm.get('startDate')?.touched)"
+                   required>
+            <div *ngIf="activityForm.get('startDate')?.invalid && activityForm.get('startDate')?.errors &&
+        (activityForm.get('startDate')?.dirty || activityForm.get('startDate')?.touched)">
+              <small class="text-danger" *ngIf="activityForm.get('startDate')?.hasError('required')">
+                * Este campo es obligatorio
+              </small>
+            </div>
+          </div>
+          <br>
+        </div>
+        <div class="col-6">
+          <div class="position-relative">
+            <label for="endDate" class="form-label">Fecha de fin</label>
+              <input type='date' id='endDate' class='form-control' formControlName="endDate"
+                     [class.valid]="activityForm.get('endDate')?.valid && (activityForm.get('endDate')?.dirty || activityForm.get('endDate')?.touched)"
+                     [class.invalid]="activityForm.get('endDate')?.invalid && (activityForm.get('endDate')?.dirty || activityForm.get('endDate')?.touched)"
+                     [min]="activityForm.get('startDate')?.value"
+                     required>
+
+            <div *ngIf="activityForm.get('endDate')?.invalid && activityForm.get('endDate')?.errors &&
+        (activityForm.get('endDate')?.dirty || activityForm.get('endDate')?.touched)">
+              <small class="text-danger" *ngIf="activityForm.get('endDate')?.hasError('required')">
+                * Este campo es obligatorio
+              </small>
+              <br>
+            </div>
+            <div *ngIf="!dateEndValid">
+              <small class="text-danger">
+                * La fecha de fin debe ser mayor o igual a la fecha de inicio
+              </small>
+            </div>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="evidence" class="form-label">Evidencia a entregar</label>
+        <textarea class="form-control" id="evidence" formControlName="evidence"
+                  [class.valid]="activityForm.get('evidence')?.valid && (activityForm.get('evidence')?.dirty || activityForm.get('evidence')?.touched)"
+                  [class.invalid]="activityForm.get('evidence')?.invalid && (activityForm.get('evidence')?.dirty || activityForm.get('evidence')?.touched)"
+        ></textarea>
+        <div *ngIf="activityForm.get('evidence')?.invalid && activityForm.get('evidence')?.errors &&
+        (activityForm.get('evidence')?.dirty || activityForm.get('evidence')?.touched)">
+          <small class="text-danger" *ngIf="activityForm.get('evidence')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="indicator" class="form-label">Indicador de medición</label>
+        <textarea class="form-control" id="indicator" formControlName="indicator"
+                  [class.valid]="activityForm.get('indicator')?.valid && (activityForm.get('indicator')?.dirty || activityForm.get('indicator')?.touched)"
+                  [class.invalid]="activityForm.get('indicator')?.invalid && (activityForm.get('indicator')?.dirty || activityForm.get('indicator')?.touched)"
+        ></textarea>
+        <div *ngIf="activityForm.get('indicator')?.invalid && activityForm.get('indicator')?.errors &&
+        (activityForm.get('indicator')?.dirty || activityForm.get('indicator')?.touched)">
+          <small class="text-danger" *ngIf="activityForm.get('indicator')?.hasError('required')">
+            * Este campo es obligatorio
+          </small>
+        </div>
+      </div>
+      <br>
+      <ng-container *ngIf="!editAnActivity">
+        <button type="submit" class="btn btn-primary" [disabled]="!activityIsValid">Agregar actividad</button>
+      </ng-container>
+      <ng-container *ngIf="editAnActivity">
+        <button type="submit" class="btn btn-primary" [disabled]="!activityIsValid">Editar actividad</button>
+      </ng-container>
+    </form>
+  </ng-container>
+
+</div>
