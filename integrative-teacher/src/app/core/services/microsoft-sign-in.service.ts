@@ -61,8 +61,8 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
         return await this.afAuth.signInWithPopup(microsoftProvider).then(
             async result => {
                 console.log(result.additionalUserInfo);
-                /*if (result.additionalUserInfo?.isNewUser) {
-                   /* const newUser: IntegrativeUser = {
+                if (result.additionalUserInfo?.isNewUser) {
+                    const newUser: IntegrativeUser = {
                         username,
                         disabled: false,
                         displayName: result.additionalUserInfo.profile['displayName'],
@@ -71,7 +71,7 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
                         uid: result.additionalUserInfo.profile['id'],
                     };
 
-                    //await this.userService.userDocument(username).set(newUser);
+                    await this.userService.userDocument(username).set(newUser);
 
                     let isDocente = false;
                     let isAdmin = false;
@@ -87,14 +87,14 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
                         isAdmin: false
                     };
                     await this.userService.claimsDocument(username).set(userClaims);
-                }*/
+                }
 
-               /* await this.userService.claims.subscribe(
+                await this.userService.claims.subscribe(
                     async value => {
                         this.userClaims = await value as UserClaimsModel;
                         this.redirectTo().then();
                     }
-                );*/
+                );
             }
         );
     }

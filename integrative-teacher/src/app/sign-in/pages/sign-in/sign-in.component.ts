@@ -20,9 +20,9 @@ import { SignIn } from '../../../models/sign-in.model';
 })
 export class SignInComponent implements OnInit {
 
-  // formLogin = new FormGroup({
-  //   username: new FormControl('')
-  // });
+  /*formLogin = new FormGroup({
+    user: new FormControl('')
+  });*/
   constructor(
     private router: Router,
     private readonly fb: FormBuilder,
