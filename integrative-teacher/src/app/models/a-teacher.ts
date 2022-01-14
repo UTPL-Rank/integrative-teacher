@@ -1,8 +1,6 @@
-import { DocumentReference } from '@angular/fire/firestore';
-
-
 export interface ATeacher {
+  id?: string;
   displayName: string;
   subject: string;
-  integrativeTeacher: DocumentReference;
+  integrativeTeacher: string;
 }
