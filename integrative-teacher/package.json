@@ -22,15 +22,16 @@
     "@angular/platform-browser-dynamic": "~10.1.6",
     "@angular/router": "~10.1.6",
     "@popperjs/core": "^2.10.2",
+    "@utpl-rank/sgm-helpers": "^1.1.40",
     "angular-feather": "^6.1.0",
     "bootstrap": "^5.0.0-beta3",
     "feather-icons": "^4.28.0",
-    "firebase": "^8.6.7",
+    "firebase": "^8.10.0",
     "firebase-admin": "^9.11.0",
+    "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.2",
-    "rxfire": "^6.0.0"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1001.7",
