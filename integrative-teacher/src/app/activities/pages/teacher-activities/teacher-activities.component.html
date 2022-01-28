@@ -1,0 +1,42 @@
+<div class="container pt-3 pb-3">
+
+  <div class="row">
+    <div class="col-12">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" data-bs-toggle="tab" type="button" role="tab" aria-controls="nav-home"
+                  aria-selected="true">Actividades planificadas
+          </button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <ng-container *ngIf="activities?.length! > 0">
+      <ng-container *ngFor="let activity of activities; let i = index">
+        <div class="col">
+          <div class="card h-100 text-center">
+            <div class="card-header">
+              Actividad {{ i + 1 }}
+            </div>
+            <div class="card-body">
+              <p class="card-text"> {{ activity.description }} </p>
+              <h5 class="card-title">
+                <span class="badge label-activity text-dark">Fechas</span>
+              </h5>
+              <p class="card-text"> {{ activity.startDate | date }} - {{ activity.endDate | date }} </p>
+              <a class="btn go-to-activity"
+                 [routerLink]="['/dashboard', 'activities', teacherUsername , activity.id, i + 1]"
+              > Ir a la actividad </a>
+            </div>
+            <div class="card-footer text-muted">
+              {{ activity.status! | titlecase }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>

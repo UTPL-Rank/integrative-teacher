@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ATeacher } from '../../../models/a-teacher';
 import { Activity } from '../../../models/activity';
 import { Subscription } from 'rxjs';
-import { TeacherService } from '../../../core/services/teacher.service';
+import {TeacherService } from '../../../core/services/teacher.service';
 import { ActivityService } from '../../../core/services/activity.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 const USERNAME_TEST = 'odmendoza';
 
 @Component({
   selector: 'app-plannig-form',
-  templateUrl: './plannig-form.component.html',
-  styleUrls: ['./plannig-form.component.scss']
+  templateUrl: './planning-form.component.html',
+  styleUrls: ['./planning-form.component.scss']
 })
-export class PlannigFormComponent implements OnInit {
+export class PlanningFormComponent implements OnInit {
 
   public editPlanning!: boolean;
   public editATeacher!: boolean;
@@ -80,34 +81,35 @@ export class PlannigFormComponent implements OnInit {
     }
 
     const newTeacher: ATeacher = {
-      displayName : this.teacherForm.value.name,
-      subject : this.teacherForm.value.subject,
-      integrativeTeacher : USERNAME_TEST
+      displayName: this.teacherForm.value.name,
+      subject: this.teacherForm.value.subject,
+      integrativeTeacher: USERNAME_TEST
     };
 
     if (!this.editATeacher) {
       this.savingTeacherSubscription = this.teacherService.saveTeacher(newTeacher).subscribe(
         async createdActivity => {
           if (createdActivity) {
-            alert('Todos los cambios están guardados');
+            await Swal.fire({title: 'Docente agregado correctamente', icon: 'success'});
             this.teacherForm.reset();
           } else {
-            alert('Ocurrió un error al guardar la información');
+            await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
           }
           // @ts-ignore
-          this.savingTeacherSubscription.unsubscribe();
+          // this.savingTeacherSubscription.unsubscribe();
         }
       );
+      this.savingTeacherSubscription.unsubscribe();
     } else {
       newTeacher.id = this.editTeacherId;
       this.teacherService.updateTeacher(newTeacher).then(
         success => {
-            alert('Todos los cambios están guardados');
-            this.teacherForm.reset();
-            this.editATeacher = false;
+          Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'}).then();
+          this.teacherForm.reset();
+          this.editATeacher = false;
         },
         error => {
-          alert('Ocurrió un error al guardar la información');
+          Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'}).then();
         }
       );
     }
@@ -119,37 +121,36 @@ export class PlannigFormComponent implements OnInit {
     }
 
     const newActivity: Activity = {
-      description : this.activityForm.value.description,
-      goal : this.activityForm.value.goal,
-      startDate : this.activityForm.value.startDate,
-      endDate : this.activityForm.value.endDate,
-      evidence : this.activityForm.value.evidence,
-      indicator : this.activityForm.value.indicator,
+      description: this.activityForm.value.description,
+      goal: this.activityForm.value.goal,
+      startDate: this.activityForm.value.startDate,
+      endDate: this.activityForm.value.endDate,
+      evidence: this.activityForm.value.evidence,
+      indicator: this.activityForm.value.indicator,
     };
 
     if (!this.editAnActivity) {
       this.savingActivitySubscription = this.activityService.saveActivity(newActivity).subscribe(
         async createdActivity => {
           if (createdActivity) {
-            alert('Todos los cambios están guardados');
+            await Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
             this.activityForm.reset();
           } else {
-            alert('Ocurrió un error al guardar la información');
+            await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
           }
-          // @ts-ignore
-          this.savingActivitySubscription.unsubscribe();
         }
       );
+      this.savingActivitySubscription.unsubscribe();
     } else {
       newActivity.id = this.editActivityId;
       this.activityService.updateActivity(newActivity).then(
         success => {
-          alert('Todos los cambios están guardados');
+          Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
           this.activityForm.reset();
           this.editAnActivity = false;
         },
         error => {
-          alert('Ocurrió un error al guardar la información');
+          Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
         }
       );
     }
@@ -204,4 +205,6 @@ export class PlannigFormComponent implements OnInit {
       return false;
     }
   }
+  // TODO : Export planning to PDF
+
 }
