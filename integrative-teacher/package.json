@@ -28,6 +28,8 @@
     "feather-icons": "^4.28.0",
     "firebase": "^8.6.7",
     "firebase-admin": "^9.11.0",
+    "html2pdf.js": "^0.9.3",
+    "js-html2pdf": "^1.1.4",
     "ngx-doc-viewer": "^2.0.5",
     "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",

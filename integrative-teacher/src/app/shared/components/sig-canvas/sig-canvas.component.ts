@@ -14,7 +14,7 @@ interface MousePosition {
 export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
-    private readonly user: UserService,
+    private readonly userService: UserService,
   ) { }
 
   @ViewChild('sigCanvas')
@@ -35,7 +35,7 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private saveSignatureSub: Subscription | null = null;
   private loadSignatureSub: Subscription | null = null;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.requestAnimFrame =
       (window as any).requestAnimationFrame ||
       (window as any).webkitRequestAnimationFrame ||
@@ -44,7 +44,7 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
       (window as any).msRequestAnimaitonFrame;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.saveSignatureSub?.unsubscribe();
     this.loadSignatureSub?.unsubscribe();
   }
@@ -148,16 +148,17 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
       { passive: false }
     );
     // DrawLoop
-    (function drawLoop() {
+    (function drawLoop(): void {
       self.requestAnimFrame(drawLoop);
       self.renderCanvas();
     })();
 
 
     // at the end of setting up everything load previously saved signature
-    this.loadSignatureSub = this.user.signature$.subscribe(document => {
-      if (!document)
+    this.loadSignatureSub = this.userService.signature$.subscribe(document => {
+      if (!document) {
         return;
+      }
 
       const signature = new Image();
 
@@ -178,7 +179,7 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  private getTouchPos(event: TouchEvent) {
+  private getTouchPos(event: TouchEvent): MousePosition {
     const { left, top } = this.canvas.getBoundingClientRect();
     const { clientX, clientY } = event.touches.item(0) as any;
     return {
@@ -187,7 +188,7 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  private renderCanvas() {
+  private renderCanvas(): void {
     if (this.drawing) {
       this.ctx.moveTo(this.lastPos.x, this.lastPos.y);
       this.ctx.lineTo(this.mousePos.x, this.mousePos.y);
@@ -196,16 +197,17 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  clearCanvas() {
+  clearCanvas(): void {
     this.canvas.width = this.canvas.width;
   }
 
   public getDataURL(): string {
     const signature = this.canvas.toDataURL();
 
-    this.saveSignatureSub = this.user.saveSignature(signature).subscribe(saved => {
-      if (saved)
+    this.saveSignatureSub = this.userService.saveSignature(signature).subscribe(saved => {
+      if (saved) {
         alert('Hemos guardado tu firma para utilizarla próximamente');
+      }
 
       this.saveSignatureSub?.unsubscribe();
       this.saveSignatureSub = null;
@@ -213,7 +215,7 @@ export class SigCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     return signature;
   }
 
-  isCanvasBlank() {
+  isCanvasBlank(): boolean {
     const pixelBuffer = new Uint32Array(
       this.ctx.getImageData(
         0,

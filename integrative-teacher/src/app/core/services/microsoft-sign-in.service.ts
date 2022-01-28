@@ -61,32 +61,33 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
         return await this.afAuth.signInWithPopup(microsoftProvider).then(
             async result => {
                 console.log(result.additionalUserInfo);
-                if (result.additionalUserInfo?.isNewUser) {
-                    const newUser: IntegrativeUser = {
-                        username,
-                        disabled: false,
-                        displayName: result.additionalUserInfo.profile['displayName'],
-                        email: result.additionalUserInfo.profile['mail'],
-                        photoURL: null,
-                        uid: result.additionalUserInfo.profile['id'],
-                    };
+                const additionalUserInfo = result.additionalUserInfo;
+                if (additionalUserInfo?.isNewUser) {
+                    // const newUser: IntegrativeUser = {
+                    //     username,
+                    //     disabled: false,
+                        // displayName: additionalUserInfo.profile['displayName'],
+                        // email: additionalUserInfo.profile['mail'],
+                        // photoURL: null,
+                        // uid: additionalUserInfo.profile['id'],
+                    // };
 
-                    await this.userService.userDocument(username).set(newUser);
+                    // await this.userService.userDocument(username).set(newUser);
 
-                    let isDocente = false;
-                    let isAdmin = false;
+                    // let isDocente = false;
+                    // let isAdmin = false;
 
-                    if (result.additionalUserInfo.profile['jobTitle'] === null) {
-                        isAdmin = true;
-                    } else {
-                        isDocente = true;
-                    }
+                    // if (additionalUserInfo.profile['jobTitle'] === null) {
+                    //     isAdmin = true;
+                    // } else {
+                    //     isDocente = true;
+                    // }
 
-                    const userClaims: UserClaimsModel = {
-                        isDocente,
-                        isAdmin: false
-                    };
-                    await this.userService.claimsDocument(username).set(userClaims);
+                    // const userClaims: UserClaimsModel = {
+                    //     isDocente,
+                    //     isAdmin: false
+                    // };
+                    // await this.userService.claimsDocument(username).set(userClaims);
                 }
 
                 await this.userService.claims.subscribe(
