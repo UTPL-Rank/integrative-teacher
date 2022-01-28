@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ActivityService } from '../../../core/services/activity.service';
 import { Activity } from '../../../models/activity';
-import { Subscription } from 'rxjs';
+import { Subscription} from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { DeliverableService } from '../../../core/services/deliverable.service';
@@ -51,7 +51,7 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
     this.isValid = false;
     this.isValidated = false;
 
-    this.route.params.subscribe((params: Params) => {
+    this.route.params.subscribe(async (params: Params) => {
       // Get params
       this.teacherUsername = params.teacherId;
       this.activityId = params.activityId;
@@ -102,6 +102,7 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
         if (createdDeliverable) {
           await Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
           this.evidenceForm.reset();
+          await this.updateState().then();
         } else {
           await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
         }
@@ -113,8 +114,9 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
 
   deleteDeliverable(deliverable: Deliverable): void {
     this.deliverableService.deleteDeliverable(deliverable).then(
-      success => {
-        Swal.fire({title: 'Archivo eliminado correctamente', icon: 'success'});
+      async success => {
+        await this.updateState().then();
+        await Swal.fire({title: 'Archivo eliminado correctamente', icon: 'success'});
       },
       error => {
         Swal.fire({title: 'Ocurrió un error al eliminar el archivo', icon: 'error'});
@@ -123,7 +125,6 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
   }
 
   detectFiles(event: any): void {
-
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.evidenceForm.patchValue({
@@ -137,6 +138,27 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
     return this.isValid;
   }
 
-  // TODO : Cambio de estado cuando se agrega o elimina archivos
+  async updateState(): Promise<void> {
+    const updatedStatus: string = await this.getUpdatedState().then();
+    if (this.activity.status !== updatedStatus) {
+      await this.activityService.updateActivityStatus(this.activityId, updatedStatus).then(
+        success => {
+          this.activity.status = updatedStatus;
+        }
+      );
+    }
+  }
+
+  getUpdatedState(): Promise<string> {
+    let status = 'planificada';
+    if (this.deliverables.length !== 0) {
+      status = 'realizada';
+    } else {
+      if (+new Date(this.activity.endDate) < +new Date()) {
+        status = 'no realizada';
+      }
+    }
+    return new Promise<string>(resolve => resolve(status));
+}
 
 }

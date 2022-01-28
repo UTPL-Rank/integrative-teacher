@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable, of, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, mergeMap, shareReplay } from 'rxjs/operators';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
@@ -43,9 +43,6 @@ export class DeliverableService {
 
 
   private async createDeliverable(file: File, deliverable: Deliverable): Promise<Deliverable> {
-
-    console.log('LLega a createDeliverable');
-
     // Cargamos el archivo y obtenemos los datos de la carga
     const deliverableUploaded = await this.uploadFile(file, this.FILES_BASE_PATH);
 
@@ -59,16 +56,10 @@ export class DeliverableService {
       url: deliverableUploaded.url,
       createdAt: Timestamp.fromDate(new Date())
     };
-
-    console.log('To be created');
-    console.log(created);
-
     return created;
   }
 
   private async uploadFile(file: File, folder: string): Promise<FileUpload> {
-
-    console.log('LLega a uploadFile');
 
     const path = `/${folder}/${file.name}`;
     await this.storage.upload(path, file);
@@ -81,21 +72,15 @@ export class DeliverableService {
         url: await ref.getDownloadURL(),
       } as FileUpload;
 
-    console.log(data);
-
     return data;
   }
 
   private async saveInDB(deliverable: Deliverable): Promise<Deliverable> {
 
-    console.log('Llega a saveInDB');
-
     const batch = this.angularFirestore.firestore.batch();
     const evidenceReference = this.evidencesCollection.doc(`${deliverable.id}`).ref;
     batch.set(evidenceReference, deliverable);
     await batch.commit();
-
-    console.log('Guardó en DB');
 
     return deliverable;
   }

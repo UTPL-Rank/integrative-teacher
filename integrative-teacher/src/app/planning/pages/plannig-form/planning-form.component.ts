@@ -25,8 +25,8 @@ export class PlanningFormComponent implements OnInit {
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
 
-  public teachers!: Array<ATeacher>;
-  public activities!: Array<Activity>;
+  public teachers: Array<ATeacher> = [];
+  public activities: Array<Activity> = [];
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
 
