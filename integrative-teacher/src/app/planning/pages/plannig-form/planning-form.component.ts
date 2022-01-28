@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ATeacher } from '../../../models/a-teacher';
 import { Activity } from '../../../models/activity';
-import { Subscription } from 'rxjs';
-import {TeacherService } from '../../../core/services/teacher.service';
+import { TeacherService } from '../../../core/services/teacher.service';
 import { ActivityService } from '../../../core/services/activity.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SigCanvasComponent } from '../../../shared/components/sig-canvas/sig-canvas.component';
 import Swal from 'sweetalert2';
+
+// @ts-ignore
+import Html2Pdf from 'js-html2pdf';
 
 const USERNAME_TEST = 'odmendoza';
 
@@ -21,23 +24,21 @@ export class PlanningFormComponent implements OnInit {
   public editAnActivity!: boolean;
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
-  public teachers!: Array<ATeacher>;
-  public activities!: Array<Activity>;
+
+  public teachers: Array<ATeacher> = [];
+  public activities: Array<Activity> = [];
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
-
-  private teacherSubscription: Subscription | null = null;
-  private activitySubscription: Subscription | null = null;
-  private savingTeacherSubscription: Subscription | null = null;
-  private savingActivitySubscription: Subscription | null = null;
 
   teacherForm: FormGroup;
   activityForm: FormGroup;
 
+  public teacherNameAndJob = '';
+
   constructor(
     private teacherService: TeacherService,
     private activityService: ActivityService,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) {
     this.teacherForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -53,15 +54,28 @@ export class PlanningFormComponent implements OnInit {
     });
   }
 
+  @ViewChild(SigCanvasComponent)
+  public sigCanvas!: SigCanvasComponent;
+
+  @ViewChild('teacherNameAndJob') d1!: ElementRef;
+
+  @ViewChild('cleanSignatureBtn') cleanSignatureBtn!: ElementRef;
+
+  @ViewChild('cleanSignature') cleanSignature!: ElementRef;
+
+
   ngOnInit(): void {
     this.editPlanning = false;
     this.editATeacher = false;
     this.editAnActivity = false;
-    this.teacherSubscription = this.teacherService.getTeachersOfAIntegrativeTeacher(USERNAME_TEST)
+    this.teacherIsValid = false;
+    this.activityIsValid = false;
+
+    this.teacherService.getTeachersOfAIntegrativeTeacher(USERNAME_TEST)
       .subscribe(teachers => {
         this.teachers = teachers;
       });
-    this.activitySubscription = this.activityService.getActivitiesOfATeacher(USERNAME_TEST)
+    this.activityService.getActivitiesOfATeacher(USERNAME_TEST)
       .subscribe(activities => {
         this.activities = activities;
       });
@@ -76,9 +90,6 @@ export class PlanningFormComponent implements OnInit {
   }
 
   saveTeacher(): void {
-    if (!!this.savingTeacherSubscription) {
-      return;
-    }
 
     const newTeacher: ATeacher = {
       displayName: this.teacherForm.value.name,
@@ -87,7 +98,7 @@ export class PlanningFormComponent implements OnInit {
     };
 
     if (!this.editATeacher) {
-      this.savingTeacherSubscription = this.teacherService.saveTeacher(newTeacher).subscribe(
+      this.teacherService.saveTeacher(newTeacher).subscribe(
         async createdActivity => {
           if (createdActivity) {
             await Swal.fire({title: 'Docente agregado correctamente', icon: 'success'});
@@ -95,11 +106,8 @@ export class PlanningFormComponent implements OnInit {
           } else {
             await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
           }
-          // @ts-ignore
-          // this.savingTeacherSubscription.unsubscribe();
         }
       );
-      this.savingTeacherSubscription.unsubscribe();
     } else {
       newTeacher.id = this.editTeacherId;
       this.teacherService.updateTeacher(newTeacher).then(
@@ -116,9 +124,6 @@ export class PlanningFormComponent implements OnInit {
   }
 
   saveActivity(): void {
-    if (!!this.savingActivitySubscription) {
-      return;
-    }
 
     const newActivity: Activity = {
       description: this.activityForm.value.description,
@@ -130,7 +135,7 @@ export class PlanningFormComponent implements OnInit {
     };
 
     if (!this.editAnActivity) {
-      this.savingActivitySubscription = this.activityService.saveActivity(newActivity).subscribe(
+      this.activityService.saveActivity(newActivity).subscribe(
         async createdActivity => {
           if (createdActivity) {
             await Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
@@ -140,7 +145,6 @@ export class PlanningFormComponent implements OnInit {
           }
         }
       );
-      this.savingActivitySubscription.unsubscribe();
     } else {
       newActivity.id = this.editActivityId;
       this.activityService.updateActivity(newActivity).then(
@@ -205,6 +209,39 @@ export class PlanningFormComponent implements OnInit {
       return false;
     }
   }
-  // TODO : Export planning to PDF
+
+  exportToPDF(): void {
+
+    this.cleanSignatureBtn.nativeElement.remove();
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', '<p>Jorge López</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>');
+
+    // Define optional configuration
+    const options = {
+      filename: USERNAME_TEST,
+      jsPDF: {
+        orientation: 'p',
+        format: 'a4',
+        floatPrecision: 'smart'
+      }
+    };
+
+    // Get the element to print
+    const element = document.getElementById('content');
+
+    // Create instance of html2pdf class
+    const exporter = new Html2Pdf(element, options);
+
+    // Get the jsPDF object to work with it
+    exporter.getPdf(false).then((pdf: { save: () => void; }) => {
+      pdf.save();
+    });
+    this.d1.nativeElement.remove();
+    this.cleanSignature?.nativeElement.insertAdjacentHTML('beforeend', '<div id="cleanSignatureBtn" #cleanSignatureBtn><div class="align-content-center">\n' +
+      '            <button type="button" class="btn btn-primary btn-sm" (click)="sigCanvas.clearCanvas()">\n' +
+      '              Limpiar firma\n' +
+      '            </button>\n' +
+      '          </div></div>');
+
+  }
 
 }

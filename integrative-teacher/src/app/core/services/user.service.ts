@@ -9,6 +9,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, shareReplay, switchMap, take } from 'rxjs/operators';
 import { UserClaimsModel } from '../../models/user-claims';
 import { IntegrativeUser } from '../../models/integrative-user';
+import { UserSignature } from '../../models/user-signature';
+
 
 const USERS_COLLECTION_NAME = 'users';
 
@@ -43,6 +45,32 @@ export class UserService {
     map(user => user?.uid ?? null)
   );
 
+  public readonly signature$: Observable<UserSignature | null> = this.username$.pipe(
+    switchMap(username => (username) ? this.signatureDocument(username).get() : of(null)),
+    map(snap => snap?.exists ? snap.data() as UserSignature : null),
+    shareReplay(1),
+  );
+
+  public signatureOf(username: string): Observable<UserSignature | null> {
+    return this.signatureDocument(username).get().pipe(
+      map(snap => snap?.exists ? snap.data() as UserSignature : null),
+      shareReplay(1)
+    );
+  }
+
+  public saveSignature(data: string): Observable<boolean> {
+    const saveTask = this.username$.pipe(
+      take(1),
+      mergeMap(async username => username ? await this.signatureDocument(username).set({ data }) : null),
+      map(() => true),
+      catchError((err) => {
+        return of(false);
+      }),
+    );
+
+    return saveTask;
+  }
+
   public claims: Observable<UserClaimsModel | null> = this.username$.pipe(
     switchMap(username => !!username ? this.claimsDocument(username).snapshotChanges() : of(null)),
     map(snapshot => snapshot?.payload.exists ? snapshot.payload.data() : null),
@@ -71,6 +99,15 @@ export class UserService {
     return this.afAuth.user.pipe(
       map(user => !!user)
     );
+  }
+
+  private signatureDocument(username: string): AngularFirestoreDocument<UserSignature> {
+    const signature = this.firestore
+      .collection('users')
+      .doc(username)
+      .collection('account-configuration')
+      .doc<UserSignature>('signature');
+    return signature;
   }
 
   public userDocument(username: string): AngularFirestoreDocument<IntegrativeUser> {

@@ -4,10 +4,13 @@ import { IconsModule } from './icons/icons.module';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { SigCanvasComponent } from './components/sig-canvas/sig-canvas.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SigCanvasComponent
+  ],
   imports: [
     CommonModule,
     IconsModule,
@@ -18,7 +21,8 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   exports: [
     IconsModule,
     ReactiveFormsModule,
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    SigCanvasComponent
   ]
 })
 export class SharedModule { }
