@@ -1,5 +1,5 @@
 .sidebar {
-  width: 4.5rem;
+  width: 4rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -39,6 +39,11 @@
     }
   }
 
+}
+
+.active{
+  color: var(--color-gray);
+  background-color: var(--color-secondary);
 }
 
 // mobile

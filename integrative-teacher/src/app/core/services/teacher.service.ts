@@ -4,7 +4,7 @@ import { AngularFirePerformance } from '@angular/fire/performance';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { from, Observable, of } from 'rxjs';
 
-import { catchError, map, mergeMap, shareReplay} from 'rxjs/operators';
+import { catchError, mergeMap, shareReplay} from 'rxjs/operators';
 
 import { ATeacher } from '../../models/a-teacher';
 

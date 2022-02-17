@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { from, Observable, of } from 'rxjs';
-
-import { catchError, map, mergeMap, shareReplay} from 'rxjs/operators';
-
+import { catchError, map, mergeMap, shareReplay } from 'rxjs/operators';
 import { Activity } from '../../models/activity';
+import firebase from 'firebase';
+import firestore = firebase.firestore;
 
 const ACTIVITIES_COLLECTION_NAME = 'activities';
 const USERNAME_TEST = 'odmendoza';
@@ -61,6 +61,33 @@ export class ActivityService {
 
     return activity;
   }
+
+  public async updateActivityStatus(activityId: string, status: string): Promise<void> {
+    return await this.activityReference(activityId).set(
+      { status },
+      { merge: true }
+    );
+  }
+
+  /**
+   * Get the firestore document of a Activity
+   * @param activityId Identifier of the Activity
+   */
+  private activityDocument(activityId: string): AngularFirestoreDocument<Activity> {
+    return this.angularFirestore
+      .collection(ACTIVITIES_COLLECTION_NAME)
+      .doc<Activity>(activityId);
+  }
+
+  public activityReference(activityId: string): firestore.DocumentReference<Activity> {
+    return this.activityDocument(activityId).ref as firestore.DocumentReference<Activity>;
+  }
+
+  public activityById(activityId: string): Observable<Activity> {
+      return this.activityDocument(activityId).get().pipe(
+        map(snap => (snap.data() as Activity))
+      );
+    }
 
   setActivity(activity: Activity): Promise<any> {
     return this.activitiesReference.doc(activity.id).set(activity);

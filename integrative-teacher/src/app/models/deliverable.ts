@@ -1,8 +1,12 @@
+import firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
+
 export interface Deliverable {
-  id?: boolean;
+  id?: string;
   owner: string;
-  filename: string;
-  path: string;
-  url: string;
-  createdAt: Date;
+  activityId?: string;
+  filename?: string;
+  path?: string;
+  url?: string;
+  createdAt?: Timestamp;
 }
