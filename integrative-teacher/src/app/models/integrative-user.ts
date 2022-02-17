@@ -5,5 +5,4 @@ export interface IntegrativeUser {
     email: string;
     photoURL: string | null;
     uid: string;
-  }
-  
+}
