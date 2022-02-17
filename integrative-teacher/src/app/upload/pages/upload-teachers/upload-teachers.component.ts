@@ -89,6 +89,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
         name: facultyData.name
       },
       cycle,
+      planningStatus: 'incompleta'
     };
   }
 

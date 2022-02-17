@@ -1,4 +1,5 @@
 import { DocumentReference } from '@angular/fire/firestore';
+
 export interface UploadTeacher {
     id: string;
     email: string;
@@ -12,4 +13,5 @@ export interface UploadTeacher {
         name: string;
     };
     cycle: string;
+    planningStatus: string;
 }
