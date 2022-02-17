@@ -41,6 +41,11 @@
 
 }
 
+.active{
+  color: var(--color-gray);
+  background-color: var(--color-secondary);
+}
+
 // mobile
 @media only screen and (max-width: 600px) {
   .sidebar {

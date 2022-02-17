@@ -1,38 +1,38 @@
-<h2 class="mt-5">Subir Docentes</h2>
+<h3 class="mt-5 fw-light">Subir Docentes</h3>
+
+<p>Los docentes deben tener el siguiente formato: <code>Correo electrónico</code>;
+  <code>Nombres y apellidos</code>;
+  <code>Id de la carrera</code>;
+  <code>Id de la facultad</code>;
+  <code>Ciclo</code>.
+</p>
 
 <div class="my-3">
   <app-read-file (upload)="readFile($event)"></app-read-file>
 </div>
 
-<p>Los docentes deben tener el siguiente formato. <code>Correo Electrónico</code> ,
-   <code>Nombres y Apellidos</code>,
-   <code>Id de la Titulación</code>,
-   <code>Id de la facultad</code>, 
-   <code>Ciclo</code>.
-  </p>
-
 <div class="card mb-5">
   <div class="table-responsive">
     <table class="table text-nowrap mb-0">
       <thead>
-        <tr>
-          <th class="font-weight-bold text-muted small">#</th>
-          <th class="font-weight-bold text-muted small">Correo</th>
-          <th class="font-weight-bold text-muted small">Nombres y Apellidos</th>      
-          <th class="font-weight-bold text-muted small">Facultad</th>
-          <th class="font-weight-bold text-muted small">Titulación</th>
-          <th class="font-weight-bold text-muted small">Ciclo</th>
-        </tr>
+      <tr>
+        <th class="font-weight-bold text-muted small">#</th>
+        <th class="font-weight-bold text-muted small">Correo</th>
+        <th class="font-weight-bold text-muted small">Nombres y Apellidos</th>
+        <th class="font-weight-bold text-muted small">Facultad</th>
+        <th class="font-weight-bold text-muted small">Titulación</th>
+        <th class="font-weight-bold text-muted small">Ciclo</th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let uploadTeacher of data; let idx = index">
-          <td class="font-weight-bold text-muted small">{{ idx + 1 }}</td>
-          <td class="font-weight-bold text-muted small">{{ uploadTeacher.email | titlecase }}</td>
-          <td class="font-weight-bold text-muted small">{{ uploadTeacher.displayName }}</td>
-          <td class="font-weight-bold text-muted small">{{ uploadTeacher.degree.name | titlecase }}</td>
-          <td class="font-weight-bold text-muted small">{{ uploadTeacher.faculty.name | titlecase }}</td>
-          <td class="font-weight-bold text-muted small">{{ uploadTeacher.cycle | titlecase }}</td>
-        </tr>
+      <tr *ngFor="let uploadTeacher of data; let idx = index">
+        <td class="font-weight-bold text-muted small">{{ idx + 1 }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.email | titlecase }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.displayName }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.degree.name | titlecase }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.faculty.name | titlecase }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.cycle | titlecase }}</td>
+      </tr>
       </tbody>
     </table>
   </div>

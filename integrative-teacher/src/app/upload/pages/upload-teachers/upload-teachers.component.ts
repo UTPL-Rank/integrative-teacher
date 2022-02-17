@@ -4,6 +4,7 @@ import { UploadTeacher } from '../../../models/upload-teacher';
 import { Faculty } from '../../../models/faculty';
 import { Degree } from '../../../models/degree';
 import { UploadData } from 'src/app/models/upload-data.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-upload-teachers',
@@ -17,9 +18,15 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
   isSaving = false;
   data: Array<UploadTeacher> | null = null;
 
+  ACADEMIC_PERIOD_ID = 'oct20-feb21';
+
   async save(): Promise<void> {
     if (!this.data) {
-      alert('Primero carge un archivo.');
+      await Swal.fire(
+        {
+          title: 'No se puede realizar esta acción. Por favor, cargue el archivo de los docentes.',
+          icon: 'error'
+        });
       return;
     }
 
@@ -35,17 +42,21 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
       });
 
       await batch.commit();
-      alert('Todos los docentes han sido guardados');
+      await Swal.fire({title: 'Los docentes han sido guardados exitosamente.', icon: 'success'});
+      this.data = null;
     } catch (error) {
       this.isSaving = false;
-      console.log(error);
-      alert('Ocurrió un error al guardar los docentes, intente nuevamente.');
+      await Swal.fire(
+        {title: 'Ocurrió un error al guardar los docentes, vuelve a intentarlo.',
+          icon: 'error'
+        }
+      );
     }
   }
 
   async transformer(rawData: string[]): Promise<UploadTeacher> {
     const data = rawData.map(t => t.toLocaleLowerCase().trim());
-    const [id, email, displayName, degreeId, facultyId, cycle] = data;
+    const [email, displayName, degreeId, facultyId, cycle] = data;
 
     const facultyReference = this.db.collection('faculties').doc(facultyId).ref as DocumentReference<Faculty>;
     const facultySnap = await facultyReference.get();
@@ -66,7 +77,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
     }
 
     return {
-      id,
+      id: `${this.ACADEMIC_PERIOD_ID}-${email.split('@')[0]}`,
       email,
       displayName,
       degree: {

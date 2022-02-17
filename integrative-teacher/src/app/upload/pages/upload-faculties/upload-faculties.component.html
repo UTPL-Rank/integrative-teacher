@@ -1,27 +1,29 @@
-<h2 class="mt-5">Subir Facultades Universitarias</h2>
+<h3 class="mt-5 fw-light">Subir Facultades Universitarias</h3>
+
+<p>Las facultades deben tener el siguiente formato: <code>Id de la facultad</code>; <code>Nombre de la
+  facultad</code>.
+</p>
 
 <div class="my-3">
   <app-read-file (upload)="readFile($event)"></app-read-file>
 </div>
 
-<p>Las Facultades deben tener el siguiente formato. <code>Id de la facultad</code>, <code>Nombre de la facultad</code>
-
 <div class="card mb-5">
   <div class="table-responsive">
     <table class="table text-nowrap mb-0">
       <thead>
-        <tr>
-          <th class="font-weight-bold text-muted small">#</th>
-          <th class="font-weight-bold text-muted small">ID de la Facultad</th>
-          <th class="font-weight-bold text-muted small">Nombre de la Facultad</th>
-        </tr>
+      <tr>
+        <th class="font-weight-bold text-muted small">#</th>
+        <th class="font-weight-bold text-muted small">ID de la Facultad</th>
+        <th class="font-weight-bold text-muted small">Nombre de la Facultad</th>
+      </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let faculty of data; let idx = index">
-          <td class="font-weight-bold text-muted small">{{ idx + 1 }}</td>
-          <td class="font-weight-bold text-muted small">{{ faculty.id| titlecase  }}</td>
-          <td class="font-weight-bold text-muted small">{{ faculty.name | titlecase }}</td>
-        </tr>
+      <tr *ngFor="let faculty of data; let idx = index">
+        <td class="font-weight-bold text-muted small">{{ idx + 1 }}</td>
+        <td class="font-weight-bold text-muted small">{{ faculty.id| titlecase  }}</td>
+        <td class="font-weight-bold text-muted small">{{ faculty.name | titlecase }}</td>
+      </tr>
       </tbody>
     </table>
   </div>

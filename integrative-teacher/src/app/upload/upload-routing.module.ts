@@ -13,7 +13,7 @@ const routes: Routes = [
       { path: 'facultades', component: UploadFacultiesComponent },
       { path: 'docentes', component: UploadTeachersComponent},
       { path: 'carreras', component: UploadDegreesComponent},
-      { path: '**', redirectTo: 'facultades' }
+      { path: '**', redirectTo: 'facultades', pathMatch: 'full' }
     ]
   },
 ];

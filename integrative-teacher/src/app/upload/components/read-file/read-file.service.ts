@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ReadFileService {
     }
 
     if (!FileReader) {
-      alert('Navegador no compatible, intente con otro navegador web.');
+      Swal.fire({title: 'No se puede realizar esta acción, el navegador no es compatible. Por favor, intente con otro navegador web.', icon: 'error'});
       return of(null);
     }
 

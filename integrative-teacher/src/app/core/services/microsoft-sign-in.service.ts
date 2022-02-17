@@ -59,18 +59,38 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
         await this.eventLog.logEvent('sign_an_action', { username });
 
         return await this.afAuth.signInWithPopup(microsoftProvider).then(
+        // return await this.afAuth.signInWithRedirect(microsoftProvider).then(
+        // return await this.afAuth.signInWithEmailAndPassword(email, password).then(
             async result => {
-                console.log(result.additionalUserInfo);
-                const additionalUserInfo = result.additionalUserInfo;
-                if (additionalUserInfo?.isNewUser) {
-                    // const newUser: IntegrativeUser = {
-                    //     username,
-                    //     disabled: false,
-                        // displayName: additionalUserInfo.profile['displayName'],
-                        // email: additionalUserInfo.profile['mail'],
-                        // photoURL: null,
-                        // uid: additionalUserInfo.profile['id'],
-                    // };
+              await this.router.navigate([
+                'dashboard',
+                'home'
+              ]);
+                // console.log(result.additionalUserInfo);
+                // const additionalUserInfo = await result.additionalUserInfo;
+                // if (!additionalUserInfo?.isNewUser) {
+                  // @ts-ignore
+                  // const displayName = additionalUserInfo?.profile['displayName'];
+                  // @ts-ignore
+                  // const email = additionalUserInfo?.profile['mail'];
+                  // @ts-ignore
+                  // const uid = additionalUserInfo?.profile['id'];
+                  // @ts-ignore
+                  // const photoURL = 'https://ui-avatars.com/api/?background=random&name=' +
+              // additionalUserInfo?.profile['givenName'].split(' ')[0] + '+' + additionalUserInfo.profile['surname'].split(' ')[0];
+
+                  // const newUser: IntegrativeUser = {
+                  //   username,
+                  //   disabled: false,
+                  //   displayName,
+                  //   email,
+                  //   photoURL,
+                  //   uid
+                  // };
+
+                  // console.log(newUser);
+
+                  // TODO: el usuario se debe crear cuando se carga desde upload
 
                     // await this.userService.userDocument(username).set(newUser);
 
@@ -88,31 +108,14 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
                     //     isAdmin: false
                     // };
                     // await this.userService.claimsDocument(username).set(userClaims);
-                }
+                // }
 
-                await this.userService.claims.subscribe(
-                    async value => {
-                        this.userClaims = await value as UserClaimsModel;
-                        this.redirectTo().then();
-                    }
-                );
-            }
-        );
+                // await this.userService.claims.subscribe(
+                //     async value => {
+                //         this.userClaims = await value as UserClaimsModel;
+                //         this.redirectTo().then();
+                //     }
+                // );
+            });
     }
-
-    async redirectTo(): Promise<void> {
-        // And redirect
-        if (this.userClaims.isDocente) {
-            await this.router.navigate([
-                'IT-docente',
-                'list-docente',
-            ]);
-        } else if (this.userClaims.isAdmin) {
-            await this.router.navigate([
-                'IT-admin',
-                'home',
-            ]);
-        }
-    }
-
 }
