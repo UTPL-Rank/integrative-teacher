@@ -1,6 +1,6 @@
 import { DocumentReference } from '@angular/fire/firestore';
 
-export interface UploadTeacher {
+export interface Teacher {
     id: string;
     email: string;
     displayName: string;
@@ -14,7 +14,7 @@ export interface UploadTeacher {
     };
     cycle: string;
     planningStatus: string;
-    period?: {
+    period: {
         reference: DocumentReference;
         name: string;
     };

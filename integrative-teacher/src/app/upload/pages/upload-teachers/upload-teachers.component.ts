@@ -37,7 +37,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
       const batch = this.db.firestore.batch();
 
       this.data.forEach(teacher => {
-        const { ref } = this.db.collection('iTeachers').doc(teacher.id);
+        const { ref } = this.db.collection('integrative-teachers').doc(teacher.id);
         batch.set(ref, teacher, { merge: true });
       });
 
@@ -92,6 +92,8 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
       planningStatus: 'incompleta'
     };
   }
+
+  //TODO: Poner periodo académico en el return de la función anterior
 
   async readFile(csv: string): Promise<void> {
 
