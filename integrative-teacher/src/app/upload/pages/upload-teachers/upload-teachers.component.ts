@@ -3,8 +3,10 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { UploadTeacher } from '../../../models/upload-teacher';
 import { Faculty } from '../../../models/faculty';
 import { Degree } from '../../../models/degree';
-import { UploadData } from 'src/app/models/upload-data.interface';
+import { UploadData } from '../../../models/upload-data.interface';
 import Swal from 'sweetalert2';
+import {AcademicPeriodsService} from '../../../core/services/academic-period.service';
+import {AcademicPeriod} from '../../../models/academic-period';
 
 @Component({
   selector: 'app-upload-teachers',
@@ -13,12 +15,21 @@ import Swal from 'sweetalert2';
 })
 export class UploadTeachersComponent implements UploadData<UploadTeacher>{
 
-  constructor(private db: AngularFirestore) { }
+  constructor(
+    private db: AngularFirestore,
+    private academicPeriodsService: AcademicPeriodsService
+    ) {
+      //TODO:Escribir un observable que devuelva el periodo actual
+      this.academicPeriodsService.one$(this.ACADEMIC_PERIOD_ID).subscribe(
+        period => this.academicPeriod = period as AcademicPeriod
+      );
+     }
 
   isSaving = false;
   data: Array<UploadTeacher> | null = null;
 
-  ACADEMIC_PERIOD_ID = 'oct20-feb21';
+  ACADEMIC_PERIOD_ID = 'abr22-ago22';
+  academicPeriod!: AcademicPeriod;
 
   async save(): Promise<void> {
     if (!this.data) {
@@ -37,7 +48,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
       const batch = this.db.firestore.batch();
 
       this.data.forEach(teacher => {
-        const { ref } = this.db.collection('iTeachers').doc(teacher.id);
+        const { ref } = this.db.collection('integrative-teachers').doc(teacher.id);
         batch.set(ref, teacher, { merge: true });
       });
 
@@ -89,8 +100,15 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
         name: facultyData.name
       },
       cycle,
+      planningStatus: 'incompleta',
+      period: {
+        reference: this.academicPeriodsService.periodDocument(this.ACADEMIC_PERIOD_ID).ref,
+        name: this.academicPeriod.name
+      }
     };
   }
+
+  //TODO: Poner periodo académico en el return de la función anterior
 
   async readFile(csv: string): Promise<void> {
 

@@ -144,5 +144,8 @@
       }
     }
   },
-  "defaultProject": "integrative-teacher"
+  "defaultProject": "integrative-teacher",
+  "cli": {
+    "analytics": "56d61480-ccb3-4570-89f4-19b30781dfe5"
+  }
 }
