@@ -11,7 +11,7 @@ import {BASE_URL} from '../utils/variables';
  * At 10:00 on all-days-of-month  in April, October on Friday.
  * URL docs: https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules 
  */
-const CRON_LOAD_PLANNIG = '0 10 * 4,10 5';
+const CRON_LOAD_PLANNIG = '0 12 * 2,3 5';
 
 export const notifyTeachersLoadPlanning =
     functions
