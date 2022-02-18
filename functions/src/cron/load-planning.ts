@@ -3,69 +3,45 @@ import {GeneralEmail} from '../shared/mail/general-email';
 import {SaveEmail} from '../shared/mail/save-email';
 import {NeverLoadPlanningEmail} from '../shared/mail/templates/load-planning-email/never-load-planning';
 import {ListTeachersWithNoLoadPlanning} from '../utils/teachers-utils';
-import {CurrentPeriod} from '../utils/period-utils';
 import {UsernameFromEmail} from '../utils/users-utils';
 import {dbFirestore} from '../utils/utils';
 import {BASE_URL} from '../utils/variables';
 
 /**
- * At 00:00 on day-of-month 5 and 20 in November, December, January, February, May, June, July, and August.
+ * At 10:00 on all-days-of-month  in April, October on Friday.
+ * URL docs: https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules 
  */
-const CRON_EVERY_MONTH = '0 0 5,20 11,12,1,2,5,6,7,8 *';
+const CRON_LOAD_PLANNIG = '0 10 * 4,10 5';
 
-export const notifyMentorsAccompaniments =
+export const notifyTeachersLoadPlanning =
     functions
         .pubsub
-        .schedule(CRON_EVERY_MONTH)
+        .schedule(CRON_LOAD_PLANNIG)
         .onRun(async _ => {
-            console.log('sending mails');
+            const [listTeachersWithNoLoadPlanning] = await Promise.all([
+                ListTeachersWithNoLoadPlanning(),
+            ]);
 
-            const [noRegisteredAccompaniments, noAccompaniments] =
-                await Promise.all([
-                    ListMentorsWithNoRegisteredAccompaniments(),
-                    ListMentorsWithNoRecentAccompaniments()]);
-            const {id: periodId} = await CurrentPeriod();
-            // const mentors = [...noRegisteredAccompaniments, ...noAccompaniments];
             const batch = dbFirestore.batch();
 
-            // Notify Mentors With No Registered Accompaniments
-            noRegisteredAccompaniments.forEach(mentor => {
+            // Notify Teacher Load Planning 
+            listTeachersWithNoLoadPlanning.forEach(teacher => {
 
-                const username = UsernameFromEmail(mentor.email);
+                const username = UsernameFromEmail(teacher.email);
 
-                const emailTemplate = new NeverRegisterAccompanimentEmail({
-                    redirectUrl: `${BASE_URL}/panel-control/${periodId}/acompañamientos/nuevo/${mentor.id}`,
-                    mentorName: mentor.displayName.toUpperCase(),
+                const emailTemplate = new NeverLoadPlanningEmail({
+                    redirectUrl: BASE_URL,
+                    displayName: teacher.displayName.toUpperCase(),
                 });
 
-                const genericEmail = new GeneralEmail(
-                    mentor.email,
-                    'Recuerda registrar el acompañamiento mentorial',
+                const generalEmail = new GeneralEmail(
+                    teacher.email,
+                    'Recuerda registrar la planificación de Docente Integrador',
                     emailTemplate,
                 );
-                const saver = new SaveEmail(username, genericEmail);
+                const saver = new SaveEmail(username, generalEmail);
                 saver.saveSynced(batch);
             });
-
-            // Notify Mentors With No Recent Accompaniments
-            noAccompaniments.forEach(mentor => {
-
-                const username = UsernameFromEmail(mentor.email);
-
-                const emailTemplate = new RememberRegisterAccompanimentEmail({
-                    redirectUrl: `${BASE_URL}/panel-control/${periodId}/acompañamientos/nuevo/${mentor.id}`,
-                    mentorName: mentor.displayName.toUpperCase(),
-                    lastAccompanimentDate: mentor.stats.lastAccompaniment?.toDate()
-                } as any );
-
-                const genericEmail = new GeneralEmail(
-                    mentor.email,
-                    'Recuerda registrar el acompañamiento mentorial',
-                    emailTemplate,
-                );
-                const saver = new SaveEmail(username, genericEmail);
-                saver.saveSynced(batch);
-            });
-
+            
             return await batch.commit();
         });
