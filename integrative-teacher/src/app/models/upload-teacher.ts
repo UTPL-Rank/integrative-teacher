@@ -14,7 +14,7 @@ export interface UploadTeacher {
     };
     cycle: string;
     planningStatus: string;
-    period?: {
+    period: {
         reference: DocumentReference;
         name: string;
     };
