@@ -1,21 +1,21 @@
-import { DocumentReference } from '@angular/fire/firestore';
+import { firestore } from "firebase-admin";
 
 export interface Teacher {
     id: string;
     email: string;
     displayName: string;
     degree: {
-        reference: DocumentReference;
+        reference: firestore.DocumentReference;
         name: string;
     };
     faculty: {
-        reference: DocumentReference;
+        reference: firestore.DocumentReference;
         name: string;
     };
     cycle: string;
     planningStatus: string;
     period: {
-        reference: DocumentReference;
+        reference: firestore.DocumentReference;
         name: string;
     };
 }
