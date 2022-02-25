@@ -9,16 +9,17 @@ import Swal from 'sweetalert2';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
+import { AcademicPeriodsService } from 'src/app/core/services/academic-period.service';
+import { AcademicPeriod } from 'src/app/models/academic-period';
 
 const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Component({
   selector: 'app-plannig-form',
   templateUrl: './planning-form.component.html',
-  styleUrls: ['./planning-form.component.scss']
+  styleUrls: ['./planning-form.component.scss'],
 })
 export class PlanningFormComponent implements OnInit {
-
   public editPlanning!: boolean;
   public editATeacher!: boolean;
   public editAnActivity!: boolean;
@@ -38,11 +39,12 @@ export class PlanningFormComponent implements OnInit {
   constructor(
     private teacherService: TeacherService,
     private activityService: ActivityService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private academicPeriodsService: AcademicPeriodsService
   ) {
     this.teacherForm = this.formBuilder.group({
       name: ['', Validators.required],
-      subject: ['', Validators.required]
+      subject: ['', Validators.required],
     });
     this.activityForm = this.formBuilder.group({
       description: ['', Validators.required],
@@ -63,6 +65,8 @@ export class PlanningFormComponent implements OnInit {
 
   @ViewChild('cleanSignature') cleanSignature!: ElementRef;
 
+  ACADEMIC_PERIOD_ID = 'abr22-ago22';
+  academicPeriod!: AcademicPeriod;
 
   ngOnInit(): void {
     this.editPlanning = false;
@@ -71,14 +75,20 @@ export class PlanningFormComponent implements OnInit {
     this.teacherIsValid = false;
     this.activityIsValid = false;
 
-    this.teacherService.getTeachersOfAIntegrativeTeacher(USERNAME_TEST)
-      .subscribe(teachers => {
+    this.teacherService
+      .getTeachersOfAIntegrativeTeacher(USERNAME_TEST)
+      .subscribe((teachers) => {
         this.teachers = teachers;
       });
-    this.activityService.getActivitiesOfATeacher(USERNAME_TEST)
-      .subscribe(activities => {
+    this.activityService
+      .getActivitiesOfATeacher(USERNAME_TEST)
+      .subscribe((activities) => {
         this.activities = activities;
       });
+    //TODO:Escribir un observable que devuelva el periodo actual
+    this.academicPeriodsService
+      .one$(this.ACADEMIC_PERIOD_ID)
+      .subscribe((period) => (this.academicPeriod = period as AcademicPeriod));
   }
 
   changeEditPlanning(e: any): void {
@@ -90,41 +100,51 @@ export class PlanningFormComponent implements OnInit {
   }
 
   saveTeacher(): void {
-
     const newTeacher: ATeacher = {
       displayName: this.teacherForm.value.name,
       subject: this.teacherForm.value.subject,
-      integrativeTeacher: USERNAME_TEST
+      integrativeTeacher: USERNAME_TEST,
     };
 
     if (!this.editATeacher) {
-      this.teacherService.saveTeacher(newTeacher).subscribe(
-        async createdActivity => {
+      this.teacherService
+        .saveTeacher(newTeacher)
+        .subscribe(async (createdActivity) => {
           if (createdActivity) {
-            await Swal.fire({title: 'Docente agregado correctamente', icon: 'success'});
+            await Swal.fire({
+              title: 'Docente agregado correctamente',
+              icon: 'success',
+            });
             this.teacherForm.reset();
           } else {
-            await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
+            await Swal.fire({
+              title: 'Ocurrió un error al guardar la información',
+              icon: 'error',
+            });
           }
-        }
-      );
+        });
     } else {
       newTeacher.id = this.editTeacherId;
       this.teacherService.updateTeacher(newTeacher).then(
-        success => {
-          Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'}).then();
+        (success) => {
+          Swal.fire({
+            title: 'Todos los cambios están guardados',
+            icon: 'success',
+          }).then();
           this.teacherForm.reset();
           this.editATeacher = false;
         },
-        error => {
-          Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'}).then();
+        (error) => {
+          Swal.fire({
+            title: 'Ocurrió un error al guardar la información',
+            icon: 'error',
+          }).then();
         }
       );
     }
   }
 
   saveActivity(): void {
-
     const newActivity: Activity = {
       description: this.activityForm.value.description,
       goal: this.activityForm.value.goal,
@@ -132,29 +152,47 @@ export class PlanningFormComponent implements OnInit {
       endDate: this.activityForm.value.endDate,
       evidence: this.activityForm.value.evidence,
       indicator: this.activityForm.value.indicator,
+      period: {
+        reference: this.academicPeriodsService.periodDocument(
+          this.ACADEMIC_PERIOD_ID
+        ).ref,
+        name: this.academicPeriod.name,
+      },
     };
 
     if (!this.editAnActivity) {
-      this.activityService.saveActivity(newActivity).subscribe(
-        async createdActivity => {
+      this.activityService
+        .saveActivity(newActivity)
+        .subscribe(async (createdActivity) => {
           if (createdActivity) {
-            await Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
+            await Swal.fire({
+              title: 'Todos los cambios están guardados',
+              icon: 'success',
+            });
             this.activityForm.reset();
           } else {
-            await Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
+            await Swal.fire({
+              title: 'Ocurrió un error al guardar la información',
+              icon: 'error',
+            });
           }
-        }
-      );
+        });
     } else {
       newActivity.id = this.editActivityId;
       this.activityService.updateActivity(newActivity).then(
-        success => {
-          Swal.fire({title: 'Todos los cambios están guardados', icon: 'success'});
+        (success) => {
+          Swal.fire({
+            title: 'Todos los cambios están guardados',
+            icon: 'success',
+          });
           this.activityForm.reset();
           this.editAnActivity = false;
         },
-        error => {
-          Swal.fire({title: 'Ocurrió un error al guardar la información', icon: 'error'});
+        (error) => {
+          Swal.fire({
+            title: 'Ocurrió un error al guardar la información',
+            icon: 'error',
+          });
         }
       );
     }
@@ -172,7 +210,7 @@ export class PlanningFormComponent implements OnInit {
     this.editTeacherId = teacher.id;
     this.teacherForm.setValue({
       name: teacher.displayName,
-      subject: teacher.subject
+      subject: teacher.subject,
     });
     this.editATeacher = true;
   }
@@ -185,7 +223,7 @@ export class PlanningFormComponent implements OnInit {
       startDate: activity.startDate,
       endDate: activity.endDate,
       evidence: activity.evidence,
-      indicator: activity.indicator
+      indicator: activity.indicator,
     });
     this.editAnActivity = true;
   }
@@ -201,7 +239,8 @@ export class PlanningFormComponent implements OnInit {
   }
 
   get dateEndValid(): boolean {
-    const valid = this.activityForm.value.endDate >= this.activityForm.value.startDate;
+    const valid =
+      this.activityForm.value.endDate >= this.activityForm.value.startDate;
     if (valid) {
       return true;
     } else {
@@ -211,9 +250,11 @@ export class PlanningFormComponent implements OnInit {
   }
 
   exportToPDF(): void {
-
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', '<p>Jorge López</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>');
+    this.d1?.nativeElement.insertAdjacentHTML(
+      'beforeend',
+      '<p>Jorge López</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>'
+    );
 
     // Define optional configuration
     const options = {
@@ -221,8 +262,8 @@ export class PlanningFormComponent implements OnInit {
       jsPDF: {
         orientation: 'p',
         format: 'a4',
-        floatPrecision: 'smart'
-      }
+        floatPrecision: 'smart',
+      },
     };
 
     // Get the element to print
@@ -232,16 +273,17 @@ export class PlanningFormComponent implements OnInit {
     const exporter = new Html2Pdf(element, options);
 
     // Get the jsPDF object to work with it
-    exporter.getPdf(false).then((pdf: { save: () => void; }) => {
+    exporter.getPdf(false).then((pdf: { save: () => void }) => {
       pdf.save();
     });
     this.d1.nativeElement.remove();
-    this.cleanSignature?.nativeElement.insertAdjacentHTML('beforeend', '<div id="cleanSignatureBtn" #cleanSignatureBtn><div class="align-content-center">\n' +
-      '            <button type="button" class="btn btn-primary btn-sm" (click)="sigCanvas.clearCanvas()">\n' +
-      '              Limpiar firma\n' +
-      '            </button>\n' +
-      '          </div></div>');
-
+    this.cleanSignature?.nativeElement.insertAdjacentHTML(
+      'beforeend',
+      '<div id="cleanSignatureBtn" #cleanSignatureBtn><div class="align-content-center">\n' +
+        '            <button type="button" class="btn btn-primary btn-sm" (click)="sigCanvas.clearCanvas()">\n' +
+        '              Limpiar firma\n' +
+        '            </button>\n' +
+        '          </div></div>'
+    );
   }
-
 }
