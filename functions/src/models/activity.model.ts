@@ -1,3 +1,5 @@
+import { firestore } from "firebase-admin";
+
 export interface Activity {
     id?: string;
     integrativeTeacher: string;
@@ -10,5 +12,9 @@ export interface Activity {
     evidence: string;
     indicator: string;
     status?: string;
+    period: {
+      reference: firestore.DocumentReference;
+      name: string;
+    };
   }
   

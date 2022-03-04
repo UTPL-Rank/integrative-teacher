@@ -1,10 +1,10 @@
 import { IEmailTemplate } from "../i-email-template";
-import { IMonthEmailData } from "./i-month-email-data";
+import { INotLoadEvidenceEmailData } from "./i-not-load-evidence-email-data";
 
-export class MonthEmail implements IEmailTemplate<IMonthEmailData>{
+export class NotLoadEvidenceEmail implements IEmailTemplate<INotLoadEvidenceEmailData>{
 
     public constructor(
-        public readonly data: IMonthEmailData,
+        public readonly data: INotLoadEvidenceEmailData,
     ) { }
 
     public html(): string {
@@ -28,13 +28,14 @@ export class MonthEmail implements IEmailTemplate<IMonthEmailData>{
         <div style="font-family: inherit; text-align: inherit"> <br> </div>
         <div style="font-family: inherit; text-align: inherit"> <span
                 style="color: #222222; font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400">
-                Reciba un cordial saludo de parte del Equipo del Proyecto Docente Integrador. <br><br>
+                Reciba un cordial saludo de parte del Equipo del Proyecto Docente Integrador; le recordamos que la actividad 
+                denominada <b>${this.data.activityName}</b>, ha finalizado el (fecha de fin de actividad), sin embargo, 
+                no se ha cargado la evidencia correspondiente al cumplimiento de dicha actividad. <br><br>
 
-                A continuación, le informamos que su porcentaje de actividades cumplidas durante el mes de (MES), es del <strong>100%</strong>. Para realizar este cálculo, se han considerado las actividades propuestas en la planificación para dicho mes, en donde se consideran como cumplidas todas las actividades finalizadas que cuentan con evidencia cargada. <br><br>
-                
-                Seguros de contar con su valiosa colaboración, le motivamos a continuar con la realización de las actividades propuestas, que permitirán alcanzar los objetivos planteados en el marco del proyecto. <br> <br>
+                Seguros de contar con su valiosa colaboración, le motivamos a continuar con la realización de las actividades propuestas, 
+                que permitirán alcanzar los objetivos planteados en el marco del proyecto. <br><br>
 
-                Para acceder al Sistema Docente Integrador ingresa aqui. </span><br>             <span
+                Para dirigirte al Sistema Docente Integrador, ingresa aqui. </span><br>             <span
                 style="color: #222222; font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400">
   
         <td align="center" bgcolor="#007bff" class="inner-td"
@@ -42,12 +43,15 @@ export class MonthEmail implements IEmailTemplate<IMonthEmailData>{
                 style="background-color:#003f72; border:1px solid #003f72; border-color: #003f72; border-radius:6px; border-width:1px; color:#ffffff; display:inline-block; font-family:arial,helvetica,sans-serif; font-size:16px; font-weight:normal; letter-spacing:0px; line-height:16px; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid;"
                 href="${this.data.redirectUrl}"
                 target="_blank"> Sistema Docente Integrador </a> </td>
-        
+        <div style="font-family: inherit; text-align: inherit"> <br>
+
+        </div>
+
         <div style="font-family: inherit; text-align: inherit"> <br> </div>
-        <div> La información de este correo ha sido generada automáticamente por el Sistema Docente Integrador. Si
-                tienes dudas o quieres notificar alguna sugerencia, contactanos a 
+        <div> La información de este correo ha sido generada automáticamente por el Sistema del Proyecto Docente Integrador. 
+                Si tiene alguna duda, sugerencia o se presentó algún inconveniente, puede contactarse al correo electrónico 
                 <strong>bigomez@utpl.edu.ec</strong>. 
-        </div> <br>
+        </div><br>
         <div style="font-family: inherit; text-align: inherit"> <span
                 style="color: #222222; font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400">
                 Atentamente, el Equipo Docente Integrador. </span> </div>
