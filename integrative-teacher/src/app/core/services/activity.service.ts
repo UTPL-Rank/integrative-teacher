@@ -47,7 +47,8 @@ export class ActivityService {
       endDate: activity.endDate,
       evidence: activity.evidence,
       indicator: activity.indicator,
-      status: 'planificada'
+      status: 'planificada',
+      period: activity.period
     };
     return activityCreated;
   }

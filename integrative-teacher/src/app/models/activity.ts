@@ -1,3 +1,5 @@
+import { DocumentReference } from '@angular/fire/firestore';
+
 export interface Activity {
   id?: string;
   integrativeTeacher?: string;
@@ -10,4 +12,8 @@ export interface Activity {
   evidence: string;
   indicator: string;
   status?: string;
+  period: {
+    reference: DocumentReference;
+    name: string;
+  };
 }

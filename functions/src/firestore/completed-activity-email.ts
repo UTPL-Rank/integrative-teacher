@@ -19,7 +19,7 @@ import { OneTeacher } from "../utils/teachers-utils";
  * Send mails to teachers, the mails are sended every time a teacher complete an activity
  *
  */
-const _SendCompletedActivityEmails = async (
+const _CompletedActivityEmails = async (
   payload: functions.Change<QueryDocumentSnapshot>,
   { params }: functions.EventContext
 ) => {
@@ -53,7 +53,7 @@ const _SendCompletedActivityEmails = async (
   }
 };
 
-export const SendCompletedActivityEmails = functions
+export const CompletedActivityEmails = functions
   .runWith({ maxInstances: 2 })
   .firestore.document("activities/{id}")
-  .onUpdate(_SendCompletedActivityEmails);
+  .onUpdate(_CompletedActivityEmails);
