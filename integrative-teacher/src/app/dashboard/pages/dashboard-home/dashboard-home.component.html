@@ -37,17 +37,43 @@
         FUNCIONES
       </h3>
       <p class="text-gray-600 mb-8">
-      <li>Conformar un grupo de trabajo con todos los docentes de primer ciclo y fomentar el trabajo interdisciplinar y
-        en equipo.
-      </li>
-      <li>Velar por la permanencia de los estudiantes de primer ciclo en la titulación y en la universidad, dando
-        seguimiento a los indicadores de retención inicial y satisfacción por el aprendizaje. Este trabajo deberá ser
-        coordinado con el equipo de calidad.
-      </li>
-      <li>Trabajar de manera coordinada con los estudiantes mentores de alumnos nuevos, con la finalidad de solventar
-        las dificultades detectadas en los estudiantes
-      </li>
+        <li>Conformar un grupo de trabajo con todos los docentes de primer ciclo y fomentar el trabajo interdisciplinar y
+          en equipo.
+        </li>
+        <li>Velar por la permanencia de los estudiantes de primer ciclo en la titulación y en la universidad, dando
+          seguimiento a los indicadores de retención inicial y satisfacción por el aprendizaje. Este trabajo deberá ser
+          coordinado con el equipo de calidad.
+        </li>
+        <li>Trabajar de manera coordinada con los estudiantes mentores de alumnos nuevos, con la finalidad de solventar
+          las dificultades detectadas en los estudiantes
+        </li>
       </p>
     </div>
   </div>
+
+  <div class="row">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#projectModal">Ver información del proyecto</button>
+
+    <div id="projectModal" class="modal">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Proyecto Docente Integrador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Aqui se encuentra el documento del Proyecto Docente Integrador</p>
+            <!--ngx-doc-viewer [url]="https://docs.google.com/spreadsheets/d/1hH2ci6xCgHEiCJasorDYpUr5Xlb3NN8F/edit?usp=sharing&ouid=100949079143530886664&rtpof=true&sd=true" viewer="google" class="absolute inset-0"></ngx-doc-viewer-->
+            <ngx-doc-viewer [url]="url" viewer="url" style="width:100%;height:90%;"></ngx-doc-viewer>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>

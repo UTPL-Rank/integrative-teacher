@@ -50,7 +50,7 @@ export class PlanningFormComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       evidence: ['', Validators.required],
-      indicator: ['', Validators.required],
+      indicator: [''],
     });
   }
 
