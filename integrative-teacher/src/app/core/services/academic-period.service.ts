@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AcademicPeriod } from '../../models/academic-period';
 import { Observable } from 'rxjs';
-import { map, shareReplay, take } from 'rxjs/operators';
+import {map, mergeMap, shareReplay, take} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { BrowserLoggerService } from './browser-logger.service';
+import {Activity} from "../../models/activity";
+
+const PERIODS_COLLECTION_NAME = 'academic-periods';
+
 
 /**
  * Manage academic periods through
@@ -37,49 +41,23 @@ export class AcademicPeriodsService {
       if (period.id === 'testing' && !environment.production)
         period.current = true;
 
-      //console.log(period);/
-
       return period;
     }))
   );
 
   /**
-   * start loading academic periods, and update internal service code
+   * Current period
    */
-  async loadAcademicPeriods(): Promise<void> {
-    try {
-      const periodsCollection = await this.periods$.pipe(take(1)).toPromise()
-      this.academicPeriods = periodsCollection;
-
-      this.loaded = true;
-      this.logger.log('Academic Periods Loaded', this.academicPeriods);
-    } catch (error) {
-      this.logger.error('loading-academic-periods', error);
-    }
-  }
-
-  /**
-   * get whether periods have been loaded
-   */
-  get hasLoaded(): boolean {
-    return this.loaded;
-  }
-
-  /**
-   * Read loaded periods, prevent reading periods if these haven't been loaded first
-   */
-  get loadedPeriods(): Array<AcademicPeriod> {
-    if (!this.loaded)
-      throw new Error('[ERROR]: Fetch Academic Periods First');
-
-    return this.academicPeriods as Array<AcademicPeriod>;
+  public current(): Observable<AcademicPeriod[]> {
+    // TODO: Improve this function (Return only the current period)
+    return this.angularFirestore.collection<AcademicPeriod>(PERIODS_COLLECTION_NAME).valueChanges({ current: true });
   }
 
   /**
    * Get firestore collection of academic periods
    */
   public periodsCollection(): AngularFirestoreCollection<AcademicPeriod> {
-    return this.angularFirestore.collection<AcademicPeriod>('academic-periods', ref => ref.orderBy('date', 'desc'));
+    return this.angularFirestore.collection<AcademicPeriod>(PERIODS_COLLECTION_NAME, ref => ref.orderBy('date', 'desc'));
   }
 
   /**

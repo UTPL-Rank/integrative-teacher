@@ -75,10 +75,14 @@ export class PlanningFormComponent implements OnInit {
       .subscribe(teachers => {
         this.teachers = teachers;
       });
+
     this.activityService.getActivitiesOfATeacher(USERNAME_TEST)
       .subscribe(activities => {
         this.activities = activities;
       });
+
+
+
   }
 
   changeEditPlanning(e: any): void {
@@ -87,6 +91,16 @@ export class PlanningFormComponent implements OnInit {
     } else {
       this.editPlanning = false;
     }
+  }
+
+  changeCompletedPlanning(e: any): void {
+
+    // TODO: Update in BD
+    // if (e.target.checked) {
+    //   this.editPlanning = true;
+    // } else {
+    //   this.editPlanning = false;
+    // }
   }
 
   saveTeacher(): void {

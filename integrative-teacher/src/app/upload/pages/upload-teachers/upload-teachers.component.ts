@@ -15,20 +15,23 @@ import {AcademicPeriod} from '../../../models/academic-period';
 })
 export class UploadTeachersComponent implements UploadData<UploadTeacher>{
 
+  ACADEMIC_PERIOD_ID!: string;
+
   constructor(
     private db: AngularFirestore,
     private academicPeriodsService: AcademicPeriodsService
     ) {
-      //TODO:Escribir un observable que devuelva el periodo actual
-      this.academicPeriodsService.one$(this.ACADEMIC_PERIOD_ID).subscribe(
-        period => this.academicPeriod = period as AcademicPeriod
-      );
+    this.academicPeriodsService.current().subscribe(
+      periods => {
+        this.academicPeriod = periods[0];
+        this.ACADEMIC_PERIOD_ID = periods[0].id;
+      }
+    );
+
      }
 
   isSaving = false;
   data: Array<UploadTeacher> | null = null;
-
-  ACADEMIC_PERIOD_ID = 'abr22-ago22';
   academicPeriod!: AcademicPeriod;
 
   async save(): Promise<void> {
@@ -108,7 +111,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
     };
   }
 
-  //TODO: Poner periodo académico en el return de la función anterior
+  // TODO: Poner periodo académico en el return de la función anterior
 
   async readFile(csv: string): Promise<void> {
 
