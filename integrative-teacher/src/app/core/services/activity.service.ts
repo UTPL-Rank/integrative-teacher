@@ -9,7 +9,7 @@ import firebase from 'firebase';
 import firestore = firebase.firestore;
 
 const ACTIVITIES_COLLECTION_NAME = 'activities';
-const USERNAME_TEST = 'odmendoza';
+const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Injectable({
   providedIn: 'root'

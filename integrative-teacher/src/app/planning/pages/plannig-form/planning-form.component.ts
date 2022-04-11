@@ -213,7 +213,7 @@ export class PlanningFormComponent implements OnInit {
   exportToPDF(): void {
 
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', '<p>Jorge López</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>');
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', '<p>Danilo Mendoza</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>');
 
     // Define optional configuration
     const options = {
