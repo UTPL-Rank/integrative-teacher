@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
-import { UploadTeacher } from '../../../models/upload-teacher';
+import { IntegrativeTeacher } from '../../../models/integrative-teacher';
 import { Faculty } from '../../../models/faculty';
 import { Degree } from '../../../models/degree';
 import { UploadData } from '../../../models/upload-data.interface';
@@ -13,7 +13,7 @@ import {AcademicPeriod} from '../../../models/academic-period';
   templateUrl: './upload-teachers.component.html',
   styleUrls: ['./upload-teachers.component.scss']
 })
-export class UploadTeachersComponent implements UploadData<UploadTeacher>{
+export class UploadTeachersComponent implements UploadData<IntegrativeTeacher>{
 
   ACADEMIC_PERIOD_ID!: string;
 
@@ -31,7 +31,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
      }
 
   isSaving = false;
-  data: Array<UploadTeacher> | null = null;
+  data: Array<IntegrativeTeacher> | null = null;
   academicPeriod!: AcademicPeriod;
 
   async save(): Promise<void> {
@@ -68,7 +68,7 @@ export class UploadTeachersComponent implements UploadData<UploadTeacher>{
     }
   }
 
-  async transformer(rawData: string[]): Promise<UploadTeacher> {
+  async transformer(rawData: string[]): Promise<IntegrativeTeacher> {
     const data = rawData.map(t => t.toLocaleLowerCase().trim());
     const [email, displayName, degreeId, facultyId, cycle] = data;
 

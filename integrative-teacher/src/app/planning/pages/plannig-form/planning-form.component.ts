@@ -6,11 +6,14 @@ import { ActivityService } from '../../../core/services/activity.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SigCanvasComponent } from '../../../shared/components/sig-canvas/sig-canvas.component';
 import Swal from 'sweetalert2';
+import { IntegrativeTeacherService } from '../../../core/services/integrative-teacher.service';
+import { IntegrativeTeacher } from '../../../models/integrative-teacher';
+import { UserService } from '../../../core/services/user.service';
+import { IntegrativeUser } from '../../../models/integrative-user';
+import { ActivatedRoute, Params } from '@angular/router';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
-
-const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Component({
   selector: 'app-plannig-form',
@@ -25,10 +28,14 @@ export class PlanningFormComponent implements OnInit {
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
 
+  public integrativeTeacher!: IntegrativeTeacher;
   public teachers: Array<ATeacher> = [];
   public activities: Array<Activity> = [];
+  public currentUser!: IntegrativeUser | null;
+
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
+  private integrativeTeacherId!: string;
 
   teacherForm: FormGroup;
   activityForm: FormGroup;
@@ -36,9 +43,12 @@ export class PlanningFormComponent implements OnInit {
   public teacherNameAndJob = '';
 
   constructor(
+    private integrativeTeacherService: IntegrativeTeacherService,
     private teacherService: TeacherService,
     private activityService: ActivityService,
-    private formBuilder: FormBuilder
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute
   ) {
     this.teacherForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -63,7 +73,6 @@ export class PlanningFormComponent implements OnInit {
 
   @ViewChild('cleanSignature') cleanSignature!: ElementRef;
 
-
   ngOnInit(): void {
     this.editPlanning = false;
     this.editATeacher = false;
@@ -71,18 +80,30 @@ export class PlanningFormComponent implements OnInit {
     this.teacherIsValid = false;
     this.activityIsValid = false;
 
-    this.teacherService.getTeachersOfAIntegrativeTeacher(USERNAME_TEST)
-      .subscribe(teachers => {
-        this.teachers = teachers;
-      });
+    this.route.params.subscribe((params: Params) => {
+      this.integrativeTeacherId = params.integrativeTeacherId;
 
-    this.activityService.getActivitiesOfATeacher(USERNAME_TEST)
-      .subscribe(activities => {
-        this.activities = activities;
-      });
+      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
+        subscribe(
+          integrativeTeacher => this.integrativeTeacher = integrativeTeacher
+      );
 
+      this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
+        .subscribe(teachers => {
+          this.teachers = teachers;
+        });
 
+      this.activityService.getActivitiesOfATeacher(this.integrativeTeacherId)
+        .subscribe(activities => {
+          this.activities = activities;
+        });
 
+      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId)
+        .subscribe(integrativeTeacher => {
+            this.integrativeTeacher = integrativeTeacher;
+          }
+        );
+    });
   }
 
   changeEditPlanning(e: any): void {
@@ -96,11 +117,30 @@ export class PlanningFormComponent implements OnInit {
   changeCompletedPlanning(e: any): void {
 
     // TODO: Update in BD
-    // if (e.target.checked) {
-    //   this.editPlanning = true;
-    // } else {
-    //   this.editPlanning = false;
-    // }
+
+    if (e.target.checked) {
+      this.integrativeTeacher.planningStatus = 'completa';
+      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+        .then(
+          success => {
+            Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
+          },
+          error => {
+            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+          }
+      );
+    } else {
+      this.integrativeTeacher.planningStatus = 'incompleta';
+      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+        .then(
+          success => {
+            Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
+          },
+          error => {
+            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+          }
+        );
+    }
   }
 
   saveTeacher(): void {
@@ -108,7 +148,7 @@ export class PlanningFormComponent implements OnInit {
     const newTeacher: ATeacher = {
       displayName: this.teacherForm.value.name,
       subject: this.teacherForm.value.subject,
-      integrativeTeacher: USERNAME_TEST
+      integrativeTeacher: this.integrativeTeacherId
     };
 
     if (!this.editATeacher) {
@@ -227,11 +267,11 @@ export class PlanningFormComponent implements OnInit {
   exportToPDF(): void {
 
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', '<p>Danilo Mendoza</p><p><b>Docente integrador de la carrera de Ciencias de la Computación</b></p>');
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.integrativeTeacher.degree.name.toUpperCase()}</b></p>`);
 
     // Define optional configuration
     const options = {
-      filename: USERNAME_TEST,
+      filename: this.integrativeTeacherId,
       jsPDF: {
         orientation: 'p',
         format: 'a4',

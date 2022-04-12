@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PlanningFormComponent } from './pages/plannig-form/planning-form.component';
 
 const routes: Routes = [
-  { path: '',
+  { path: ':integrativeTeacherId',
     component: PlanningFormComponent,
   },
 ];

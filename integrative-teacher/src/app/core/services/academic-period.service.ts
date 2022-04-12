@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import {map, mergeMap, shareReplay, take} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { BrowserLoggerService } from './browser-logger.service';
-import {Activity} from "../../models/activity";
 
 const PERIODS_COLLECTION_NAME = 'academic-periods';
 

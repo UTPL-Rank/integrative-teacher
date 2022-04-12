@@ -1,8 +1,21 @@
+import { DocumentReference } from '@angular/fire/firestore';
+
 export interface IntegrativeTeacher {
-  id: boolean;
-  displayName: string;
-  faculty: string;
-  career: string;
-  cycle: string;
-  academicPeriod: string;
+    id: string;
+    email: string;
+    displayName: string;
+    degree: {
+        reference: DocumentReference;
+        name: string;
+    };
+    faculty: {
+        reference: DocumentReference;
+        name: string;
+    };
+    cycle: string;
+    planningStatus: string;
+    period: {
+        reference: DocumentReference;
+        name: string;
+    };
 }

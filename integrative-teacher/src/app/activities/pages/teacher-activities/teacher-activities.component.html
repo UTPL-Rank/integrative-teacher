@@ -15,7 +15,7 @@
   <br><br>
 
   <div class="row row-cols-1 row-cols-md-3 g-4">
-    <ng-container *ngIf="activities?.length! > 0">
+    <ng-container *ngIf="activities?.length! > 0 else activitiesEmpty">
       <ng-container *ngFor="let activity of activities; let i = index">
         <div class="col">
           <div class="card h-100 text-center">
@@ -39,4 +39,12 @@
         </div>
       </ng-container>
     </ng-container>
+
+    <ng-template #activitiesEmpty>
+      <br><br>
+      <div class="card card-body text-center alert alert-info">
+        <p><i>Aún no has agregado ninguna actividad</i></p>
+      </div>
+    </ng-template>
+
   </div>
