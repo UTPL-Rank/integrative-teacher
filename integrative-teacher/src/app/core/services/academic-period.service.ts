@@ -80,4 +80,38 @@ export class AcademicPeriodsService {
     );
     return period;
   }
+
+  /**
+   * start loading academic periods, and update internal service code
+   */
+  async loadAcademicPeriods(): Promise<void> {
+    try {
+      const periodsCollection = await this.periods$.pipe(take(1)).toPromise()
+      this.academicPeriods = periodsCollection;
+
+      this.loaded = true;
+      this.logger.log('Academic Periods Loaded', this.academicPeriods);
+    } catch (error) {
+      await this.logger.error('loading-academic-periods', error);
+    }
+  }
+
+  /**
+   * get whether periods have been loaded
+   */
+  get hasLoaded(): boolean {
+    return this.loaded;
+  }
+
+  /**
+   * Read loaded periods, prevent reading periods if these haven't been loaded first
+   */
+  get loadedPeriods(): Array<AcademicPeriod> {
+    if (!this.loaded) {
+      throw new Error('[ERROR]: Fetch Academic Periods First');
+    }
+
+    return this.academicPeriods as Array<AcademicPeriod>;
+  }
+
 }

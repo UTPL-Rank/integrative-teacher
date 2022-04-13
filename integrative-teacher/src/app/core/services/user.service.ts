@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap, shareReplay, switchMap, take } from 'rxjs/operators';
-import { UserClaimsModel } from '../../models/user-claims';
+import { UserClaims } from '../../models/user-claims';
 import { IntegrativeUser } from '../../models/integrative-user';
 import { UserSignature } from '../../models/user-signature';
 
@@ -71,7 +71,7 @@ export class UserService {
     return saveTask;
   }
 
-  public claims: Observable<UserClaimsModel | null> = this.username$.pipe(
+  public claims: Observable<UserClaims | null> = this.username$.pipe(
     switchMap(username => !!username ? this.claimsDocument(username).snapshotChanges() : of(null)),
     map(snapshot => snapshot?.payload.exists ? snapshot.payload.data() : null),
     shareReplay(1),
@@ -115,12 +115,12 @@ export class UserService {
     return userDoc;
   }
 
-  public claimsDocument(username: string): AngularFirestoreDocument<UserClaimsModel> {
+  public claimsDocument(username: string): AngularFirestoreDocument<UserClaims> {
     const claims = this.firestore
       .collection('users')
       .doc(username)
       .collection('account-configuration')
-      .doc<UserClaimsModel>('claims');
+      .doc<UserClaims>('claims');
     return claims;
   }
 

@@ -83,10 +83,10 @@ export class PlanningFormComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.integrativeTeacherId = params.integrativeTeacherId;
 
-      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
-        subscribe(
-          integrativeTeacher => this.integrativeTeacher = integrativeTeacher
-      );
+      // this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
+      //   subscribe(
+      //     integrativeTeacher => this.integrativeTeacher = integrativeTeacher
+      // );
 
       this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
         .subscribe(teachers => {

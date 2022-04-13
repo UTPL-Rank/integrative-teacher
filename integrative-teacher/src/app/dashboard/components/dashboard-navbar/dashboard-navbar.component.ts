@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { AcademicPeriod } from '../../../models/academic-period';
+import { UserClaims } from '../../../models/user-claims';
+import { IntegrativeUser } from '../../../models/integrative-user';
+// @ts-ignore
+import { User } from 'firebase/app';
+import {UserService} from "../../../core/services/user.service";
 
 
 @Component({
@@ -10,9 +15,26 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DashboardNavbarComponent implements OnInit {
   USERNAME_TEST = 'abr22-ago22-odmendoza';
-  constructor() { }
+
+  public user!: User;
+  public claims!: UserClaims | null;
+
+  private integrativeTeacherId!: string;
+
+  constructor(
+    private readonly auth: UserService,
+  ) { }
 
   ngOnInit(): void {
+
+    this.auth.claims.subscribe(
+      claims => this.claims = claims
+    );
+
+    this.auth.currentUser.subscribe(
+      user => this.user = user
+    );
+
   }
 
 }

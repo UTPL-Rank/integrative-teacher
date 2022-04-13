@@ -20,9 +20,6 @@ import { SignIn } from '../../../models/sign-in.model';
 })
 export class SignInComponent implements OnInit {
 
-  /*formLogin = new FormGroup({
-    user: new FormControl('')
-  });*/
   constructor(
     private router: Router,
     private readonly fb: FormBuilder,
@@ -45,7 +42,7 @@ export class SignInComponent implements OnInit {
     }
 
     const username = value.username as string;
-    console.log(username);
+    // console.log(username);
     await this.microsoftSignIn.signIn({ username }).then();
   }
 

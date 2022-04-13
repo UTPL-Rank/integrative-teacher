@@ -9,19 +9,20 @@ import { Subscription } from 'rxjs';
 import { SignIn } from '../../models/sign-in.model';
 import { MicrosoftSignInOptions } from '../../models/microsoft-sign-in-options.model';
 import { IntegrativeUser } from '../../models/integrative-user';
-import { UserClaimsModel } from '../../models/user-claims';
+import { UserClaims } from '../../models/user-claims';
 
 // services
-import { UserService } from '../../core/services/user.service';
+import { UserService } from './user.service';
 
 
 @Injectable({ providedIn: 'root' })
 export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
 
     subscription!: Subscription;
-    userClaims: UserClaimsModel = {
-        isAdmin: false,
-        isDocente: false
+    userClaims: UserClaims = {
+      isAdmin: false,
+      isTeacher: false,
+      integrativeTeacherId: ''
     };
 
     constructor(
@@ -37,7 +38,7 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
 
         // early return since no username was provided
         if (!options?.username) {
-            //CAMBIAR de lugar
+            // CAMBIAR de lugar
             alert('No se ingresó un usuario válido');
             return;
         }
@@ -59,63 +60,52 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
         await this.eventLog.logEvent('sign_an_action', { username });
 
         return await this.afAuth.signInWithPopup(microsoftProvider).then(
-        // return await this.afAuth.signInWithRedirect(microsoftProvider).then(
-        // return await this.afAuth.signInWithEmailAndPassword(email, password).then(
             async result => {
-              await this.router.navigate([
-                'dashboard',
-                'home'
-              ]);
-                // console.log(result.additionalUserInfo);
-                // const additionalUserInfo = await result.additionalUserInfo;
-                // if (!additionalUserInfo?.isNewUser) {
-                  // @ts-ignore
-                  // const displayName = additionalUserInfo?.profile['displayName'];
-                  // @ts-ignore
-                  // const email = additionalUserInfo?.profile['mail'];
-                  // @ts-ignore
-                  // const uid = additionalUserInfo?.profile['id'];
-                  // @ts-ignore
-                  // const photoURL = 'https://ui-avatars.com/api/?background=random&name=' +
-              // additionalUserInfo?.profile['givenName'].split(' ')[0] + '+' + additionalUserInfo.profile['surname'].split(' ')[0];
+              console.log(result.additionalUserInfo);
+              const additionalUserInfo = await result.additionalUserInfo;
+              if (additionalUserInfo && additionalUserInfo.isNewUser) {
+                // @ts-ignore
+                const displayName = additionalUserInfo.profile.displayName;
+                // @ts-ignore
+                const email = additionalUserInfo.profile.mail;
+                // @ts-ignore
+                const uid = additionalUserInfo.profile.id;
+                // @ts-ignore
+                // tslint:disable-next-line:max-line-length
+                const photoURL = 'https://ui-avatars.com/api/?background=random&name=' + additionalUserInfo?.profile.givenName.split(' ')[0] + '+' + additionalUserInfo.profile.surname.split(' ')[0];
 
-                  // const newUser: IntegrativeUser = {
-                  //   username,
-                  //   disabled: false,
-                  //   displayName,
-                  //   email,
-                  //   photoURL,
-                  //   uid
-                  // };
+                const newUser: IntegrativeUser = {
+                  username,
+                  disabled: false,
+                  displayName,
+                  email,
+                  photoURL,
+                  uid
+                };
 
-                  // console.log(newUser);
+                console.log(newUser);
 
-                  // TODO: el usuario se debe crear cuando se carga desde upload
+                // TODO: el usuario se debe crear cuando se carga desde upload
 
-                    // await this.userService.userDocument(username).set(newUser);
+                await this.userService.userDocument(username).set(newUser);
 
-                    // let isDocente = false;
-                    // let isAdmin = false;
+                let isTeacher = false;
 
-                    // if (additionalUserInfo.profile['jobTitle'] === null) {
-                    //     isAdmin = true;
-                    // } else {
-                    //     isDocente = true;
-                    // }
+                // @ts-ignore
+                if (additionalUserInfo.profile.jobTitle !== null) {
+                    isTeacher = true;
+                }
 
-                    // const userClaims: UserClaimsModel = {
-                    //     isDocente,
-                    //     isAdmin: false
-                    // };
-                    // await this.userService.claimsDocument(username).set(userClaims);
-                // }
+                const userClaims: UserClaims = {
+                    isTeacher,
+                    isAdmin: false,
+                    integrativeTeacherId: `abr22-ago22-${username}`
+                };
+                await this.userService.claimsDocument(username).set(userClaims);
+              }
 
-                // await this.userService.claims.subscribe(
-                //     async value => {
-                //         this.userClaims = await value as UserClaimsModel;
-                //         this.redirectTo().then();
-                //     }
-                // );
+              await this.router.navigate(['dashboard', 'home']);
+
             });
     }
 }

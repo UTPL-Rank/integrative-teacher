@@ -1,5 +1,5 @@
-export interface UserClaimsModel {
+export interface UserClaims {
     isAdmin: boolean;
-    isDocente: boolean;
+    isTeacher: boolean;
+    integrativeTeacherId: string;
   }
-  

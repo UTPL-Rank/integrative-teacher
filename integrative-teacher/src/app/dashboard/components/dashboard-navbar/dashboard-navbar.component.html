@@ -1,6 +1,6 @@
 <ng-container>
     <nav class="sidebar">
-      <ng-container>
+      <ng-container *ngIf="claims">
         <a
           class="sidebar--item"
           [routerLink]="['/dashboard', 'home']"
@@ -18,7 +18,7 @@
       </ng-container>
 
       <!-- docs -->
-      <ng-container>
+      <ng-container *ngIf="claims">
         <a
           class="sidebar--item"
           data-tooltip="Documentos importantes"
@@ -35,7 +35,7 @@
       </ng-container>
 
       <!-- planning -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isTeacher">
         <a
           class="sidebar--item"
           data-tooltip="Planificación"
@@ -53,7 +53,7 @@
       </ng-container>
 
       <!-- activities -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isTeacher">
         <a
           class="sidebar--item"
           data-tooltip="Actividades"
@@ -71,7 +71,7 @@
       </ng-container>
 
       <!-- analytics -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isAdmin">
         <a
           class="sidebar--item"
           data-tooltip="Analíticas"
@@ -89,7 +89,7 @@
       </ng-container>
 
       <!-- upload -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isAdmin">
         <a
           class="sidebar--item"
           data-tooltip="Subir información"
