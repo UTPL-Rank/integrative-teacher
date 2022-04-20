@@ -7,8 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImportantDocumentsComponent implements OnInit {
 
-  // url = 'https://docs.google.com/spreadsheets/d/1RLBSB1fKzAKY_FecXdDwOObywq-XnFBj/preview?ouid=115298535190732802212';
-  url = 'https://docs.google.com/spreadsheets/d/1EGMGZhRADzqaxPS0RG6Qc71MZaTgC_Jx/preview?';
+  url = 'https://docs.google.com/spreadsheets/d/1EGMGZhRADzqaxPS0RG6Qc71MZaTgC_Jx/preview?ouid=115298535190732802212';
   url2 = 'https://docs.google.com/file/d/1-9MJGZVleOtYQq7pVJ-90hLpmiX1lkZM/preview';
   url3 = 'https://docs.google.com/file/d/1wj4A1zTWxbVMavjIql0fplIu3huO_t_O/preview';
 
