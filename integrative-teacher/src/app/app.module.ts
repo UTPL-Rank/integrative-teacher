@@ -13,6 +13,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 
+
 @NgModule({
   declarations: [
     AppComponent
@@ -23,7 +24,6 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     CoreModule,
     SharedModule,
-
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,

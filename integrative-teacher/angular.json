@@ -20,6 +20,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "@firebase/app-check"
+            ],
             "outputPath": "dist/integrative-teacher",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -141,5 +144,8 @@
       }
     }
   },
-  "defaultProject": "integrative-teacher"
+  "defaultProject": "integrative-teacher",
+  "cli": {
+    "analytics": "56d61480-ccb3-4570-89f4-19b30781dfe5"
+  }
 }

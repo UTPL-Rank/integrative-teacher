@@ -7,3 +7,5 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'integrative-teacher';
 }
+
+// TODO: Guard for sign in user, administrator and teacher

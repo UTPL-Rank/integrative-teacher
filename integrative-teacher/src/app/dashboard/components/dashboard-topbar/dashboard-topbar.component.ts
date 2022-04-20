@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AcademicPeriodsService } from '../../../core/services/academic-period.service';
+import { AcademicPeriod } from '../../../models/academic-period';
 
 @Component({
   selector: 'app-dashboard-topbar',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardTopbarComponent implements OnInit {
 
-  constructor() { }
+  public academicPeriod!: AcademicPeriod | null;
+  public academicPeriodsList!: Array<AcademicPeriod>;
+
+  constructor(
+    private academicPeriodsService: AcademicPeriodsService
+  ) { }
 
   ngOnInit(): void {
+    this.academicPeriodsService.current().subscribe(
+      periods => this.academicPeriod = periods[0]
+    );
   }
 
 }

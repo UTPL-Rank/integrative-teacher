@@ -1,12 +1,11 @@
 <ng-container>
     <nav class="sidebar">
-      <ng-container>
+      <ng-container *ngIf="claims">
         <a
           class="sidebar--item"
           [routerLink]="['/dashboard', 'home']"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
-
           data-bs-toggle="tooltip"
           data-bs-placement="right"
           title="Inicio"
@@ -18,13 +17,33 @@
         </a>
       </ng-container>
 
+      <!-- docs -->
+      <ng-container *ngIf="claims">
+        <a
+          class="sidebar--item"
+          data-tooltip="Documentos importantes"
+          [routerLink]="['/dashboard', 'documents']"
+          routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Documentos importantes"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="file-text"></i-feather>
+          </div>
+        </a>
+      </ng-container>
+
       <!-- planning -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isTeacher">
         <a
           class="sidebar--item"
           data-tooltip="Planificación"
-          [routerLink]="['/dashboard', 'planning']"
+          [routerLink]="['/dashboard', 'planning', USERNAME_TEST]"
           routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Planificación"
         >
           <div class="item--icon">
             <i-feather class="fas" name="layout"></i-feather>
@@ -34,12 +53,15 @@
       </ng-container>
 
       <!-- activities -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isTeacher">
         <a
           class="sidebar--item"
           data-tooltip="Actividades"
-          [routerLink]="['/dashboard', 'activities']"
+          [routerLink]="['/dashboard', 'activities', USERNAME_TEST]"
           routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Actividades"
         >
           <div class="item--icon">
             <i-feather class="fas" name="activity"></i-feather>
@@ -49,12 +71,15 @@
       </ng-container>
 
       <!-- analytics -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isAdmin">
         <a
           class="sidebar--item"
           data-tooltip="Analíticas"
           [routerLink]="['/dashboard', 'analytics']"
           routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Analíticas"
         >
           <div class="item--icon">
             <i-feather class="fas" name="pie-chart"></i-feather>
@@ -64,12 +89,15 @@
       </ng-container>
 
       <!-- upload -->
-      <ng-container>
+      <ng-container *ngIf="claims && claims.isAdmin">
         <a
           class="sidebar--item"
           data-tooltip="Subir información"
           [routerLink]="['/dashboard', 'upload']"
           routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Subir información"
         >
           <div class="item--icon">
             <i-feather class="fas" name="upload"></i-feather>
