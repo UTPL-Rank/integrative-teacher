@@ -70,6 +70,23 @@
         </a>
       </ng-container>
 
+      <!-- teachers -->
+      <ng-container *ngIf="claims && claims.isAdmin">
+        <a
+          class="sidebar--item"
+          data-tooltip="Docentes integradores"
+          [routerLink]="['/dashboard', 'teachers']"
+          routerLinkActive="active"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+          title="Docentes integradores"
+        >
+          <div class="item--icon">
+            <i-feather class="fas" name="users"></i-feather>
+          </div>
+        </a>
+      </ng-container>
+
       <!-- analytics -->
       <ng-container *ngIf="claims && claims.isAdmin">
         <a
