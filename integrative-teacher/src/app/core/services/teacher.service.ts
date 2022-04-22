@@ -9,7 +9,6 @@ import { catchError, mergeMap, shareReplay} from 'rxjs/operators';
 import { ATeacher } from '../../models/a-teacher';
 
 const TEACHERS_COLLECTION_NAME = 'teachers';
-const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +41,7 @@ export class TeacherService {
   private async createTeacher(teacher: ATeacher): Promise<ATeacher> {
     const teacherCreated: ATeacher =  {
       id: `${ (new Date()).valueOf() }`, // Date Integer
-      integrativeTeacher: USERNAME_TEST,
+      integrativeTeacher: teacher.integrativeTeacher,
       displayName: teacher.displayName,
       subject: teacher.subject
     };

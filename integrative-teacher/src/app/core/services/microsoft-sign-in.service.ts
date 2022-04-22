@@ -18,12 +18,12 @@ import { UserService } from './user.service';
 @Injectable({ providedIn: 'root' })
 export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
 
-    subscription!: Subscription;
-    userClaims: UserClaims = {
-      isAdmin: false,
-      isTeacher: false,
-      integrativeTeacherId: ''
-    };
+    // subscription!: Subscription;
+    // userClaims: UserClaims = {
+    //   isAdmin: false,
+    //   isTeacher: false,
+    //   integrativeTeacherId: ''
+    // };
 
     constructor(
         private router: Router,

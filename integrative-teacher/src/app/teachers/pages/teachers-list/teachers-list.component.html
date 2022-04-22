@@ -1,0 +1,25 @@
+<div class="container mt-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item" *ngFor="let faculty of faculties">
+      <!-- upload facultades route -->
+      <a [routerLink]="[faculty.id]" class="nav-link text-center" routerLinkActive #faculties="routerLinkActive">
+<!--         [ngClass]="{ 'active': faculties.isActive }">-->
+        {{ faculty.name | titlecase }}
+      </a>
+    </li>
+<!--    <li class="nav-item">-->
+<!--      &lt;!&ndash; upload docentes route &ndash;&gt;-->
+<!--      <a [routerLink]="['carreras']" class="nav-link text-center" routerLinkActive #degrees="routerLinkActive"-->
+<!--         [ngClass]="{ 'active': degrees.isActive }">-->
+<!--        Carreras-->
+<!--      </a>-->
+<!--    </li>-->
+<!--    <li class="nav-item">-->
+<!--      &lt;!&ndash; upload docentes route &ndash;&gt;-->
+<!--      <a [routerLink]="['docentes']" class="nav-link text-center" routerLinkActive #teachers="routerLinkActive"-->
+<!--         [ngClass]="{ 'active': teachers.isActive }">-->
+<!--        Docentes-->
+<!--      </a>-->
+<!--    </li>-->
+  </ul>
+</div>

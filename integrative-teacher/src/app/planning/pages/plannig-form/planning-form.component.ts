@@ -83,10 +83,10 @@ export class PlanningFormComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.integrativeTeacherId = params.integrativeTeacherId;
 
-      // this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
-      //   subscribe(
-      //     integrativeTeacher => this.integrativeTeacher = integrativeTeacher
-      // );
+      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
+        subscribe(
+          integrativeTeacher => this.integrativeTeacher = integrativeTeacher
+      );
 
       this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
         .subscribe(teachers => {
@@ -115,9 +115,6 @@ export class PlanningFormComponent implements OnInit {
   }
 
   changeCompletedPlanning(e: any): void {
-
-    // TODO: Update in BD
-
     if (e.target.checked) {
       this.integrativeTeacher.planningStatus = 'completa';
       this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
@@ -186,6 +183,7 @@ export class PlanningFormComponent implements OnInit {
       endDate: this.activityForm.value.endDate,
       evidence: this.activityForm.value.evidence,
       indicator: this.activityForm.value.indicator,
+      integrativeTeacher: this.integrativeTeacherId
     };
 
     if (!this.editAnActivity) {

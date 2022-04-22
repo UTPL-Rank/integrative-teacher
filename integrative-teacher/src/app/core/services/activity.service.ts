@@ -9,7 +9,7 @@ import firebase from 'firebase';
 import firestore = firebase.firestore;
 
 const ACTIVITIES_COLLECTION_NAME = 'activities';
-const USERNAME_TEST = 'abr22-ago22-odmendoza';
+// const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class ActivityService {
   private async createActivity(activity: Activity): Promise<Activity> {
     const activityCreated: Activity =  {
       id: `${ (new Date()).valueOf() }`, // Date Integer
-      integrativeTeacher: USERNAME_TEST,
+      integrativeTeacher: activity.integrativeTeacher,
       description: activity.description,
       goal: activity.goal,
       createdAt: new Date(),
@@ -53,7 +53,6 @@ export class ActivityService {
   }
 
   private async saveInDB(activity: Activity): Promise<Activity> {
-
     const batch = this.angularFirestore.firestore.batch();
     const activityReference = this.activitiesReference.doc(`${activity.id}`).ref;
     batch.set(activityReference, activity);
