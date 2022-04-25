@@ -8,7 +8,6 @@ import firestore = firebase.firestore;
 import { Faculty } from '../../models/faculty';
 
 const FACULTIES_COLLECTION_NAME = 'faculties';
-// const USERNAME_TEST = 'abr22-ago22-odmendoza';
 
 @Injectable({
   providedIn: 'root'
