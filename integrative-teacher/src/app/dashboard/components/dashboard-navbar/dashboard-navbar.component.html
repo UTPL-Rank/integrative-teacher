@@ -39,7 +39,7 @@
         <a
           class="sidebar--item"
           data-tooltip="Planificación"
-          [routerLink]="['/dashboard', 'planning', USERNAME_TEST]"
+          [routerLink]="['/dashboard', 'planning', claims.integrativeTeacherId]"
           routerLinkActive="active"
           data-bs-toggle="tooltip"
           data-bs-placement="right"
@@ -57,7 +57,7 @@
         <a
           class="sidebar--item"
           data-tooltip="Actividades"
-          [routerLink]="['/dashboard', 'activities', USERNAME_TEST]"
+          [routerLink]="['/dashboard', 'activities', claims.integrativeTeacherId]"
           routerLinkActive="active"
           data-bs-toggle="tooltip"
           data-bs-placement="right"

@@ -14,12 +14,9 @@ import {UserService} from "../../../core/services/user.service";
   styleUrls: ['./dashboard-navbar.component.scss']
 })
 export class DashboardNavbarComponent implements OnInit {
-  USERNAME_TEST = 'abr22-ago22-odmendoza';
 
   public user!: User;
   public claims!: UserClaims | null;
-
-  private integrativeTeacherId!: string;
 
   constructor(
     private readonly auth: UserService,
