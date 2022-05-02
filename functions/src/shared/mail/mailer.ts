@@ -28,8 +28,8 @@ export class Mailer {
             port: 587,
             secure: false,
             auth: {
-                user: MailConfig.mentorshipEmail,
-                pass: MailConfig.mentorshipPassword,
+                user: MailConfig.integratorEmail,
+                pass: MailConfig.integratorPassword,
             },
             tls: { ciphers: 'SSLv3' }
         });

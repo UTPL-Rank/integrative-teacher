@@ -32,6 +32,11 @@ const routes: Routes = [
         canActivate: [IsTeacherGuard]
       },
       {
+        path: 'teachers',
+        loadChildren: () => import('../teachers/teachers.module').then(m => m.TeachersModule),
+        canActivate: [IsAdminGuard]
+      },
+      {
         path: 'analytics',
         loadChildren: () => import('../analytics/analytics.module').then(m => m.AnalyticsModule),
         canActivate: [IsAdminGuard]

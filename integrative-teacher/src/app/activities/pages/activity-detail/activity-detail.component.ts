@@ -8,8 +8,6 @@ import Swal from 'sweetalert2';
 import { DeliverableService } from '../../../core/services/deliverable.service';
 import { Deliverable } from '../../../models/deliverable';
 
-const USERNAME = 'abr22-ago22-odmendoza';
-
 
 @Component({
   selector: 'app-activity-detail',
@@ -90,7 +88,7 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
     }
 
     const deliverable: Deliverable = {
-      owner: USERNAME,
+      owner: this.teacherUsername,
       activityId: this.activity.id
     };
 

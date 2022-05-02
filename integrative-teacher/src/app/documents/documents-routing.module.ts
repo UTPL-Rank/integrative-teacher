@@ -5,7 +5,7 @@ import { ImportantDocumentsComponent } from './pages/important-documents/importa
 const routes: Routes = [
   {
     path:'',
-    component:ImportantDocumentsComponent
+    component: ImportantDocumentsComponent
   }
 ];
 

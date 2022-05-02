@@ -25,7 +25,7 @@ export class SaveEmail<T> {
         const {
             id = this._emailCollection.doc().id,
             sended = false,
-            from = MailConfig.mentorshipEmail,
+            from = MailConfig.integratorEmail,
             to,
             subject,
             html,

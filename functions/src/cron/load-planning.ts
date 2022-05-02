@@ -1,17 +1,17 @@
 import * as functions from 'firebase-functions';
-import {GeneralEmail} from '../shared/mail/general-email';
-import {SaveEmail} from '../shared/mail/save-email';
-import {NeverLoadPlanningEmail} from '../shared/mail/templates/load-planning-email/never-load-planning';
-import {ListTeachersWithNoLoadPlanning} from '../utils/teachers-utils';
-import {UsernameFromEmail} from '../utils/users-utils';
-import {dbFirestore} from '../utils/utils';
-import {BASE_URL} from '../utils/variables';
+import { GeneralEmail} from '../shared/mail/general-email';
+import { SaveEmail} from '../shared/mail/save-email';
+import { NeverLoadPlanningEmail } from '../shared/mail/templates/load-planning-email/never-load-planning';
+import { ListTeachersWithNoLoadPlanning } from '../utils/teachers-utils';
+import { UsernameFromEmail } from '../utils/users-utils';
+import { dbFirestore } from '../utils/utils';
+import { BASE_URL } from '../utils/variables';
 
 /**
  * At 10:00 on all-days-of-month  in April, October on Friday.
  * URL docs: https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules 
  */
-const CRON_LOAD_PLANNIG = '0 8 23 2 *';
+const CRON_LOAD_PLANNIG = '0 19 1 5 *';
 
 export const notifyTeachersLoadPlanning =
     functions
