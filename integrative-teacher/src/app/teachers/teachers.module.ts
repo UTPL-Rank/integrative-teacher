@@ -7,7 +7,10 @@ import { TeacherViewComponent } from './pages/teacher-view/teacher-view.componen
 
 
 @NgModule({
-  declarations: [TeachersListComponent, TeacherViewComponent],
+  declarations: [
+    TeachersListComponent,
+    TeacherViewComponent
+  ],
   imports: [
     CommonModule,
     TeachersRoutingModule

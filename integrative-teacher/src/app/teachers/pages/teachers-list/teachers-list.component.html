@@ -1,25 +1,53 @@
 <div class="container mt-3">
-  <ul class="nav nav-tabs">
-    <li class="nav-item" *ngFor="let faculty of faculties">
-      <!-- upload facultades route -->
-      <a [routerLink]="[faculty.id]" class="nav-link text-center" routerLinkActive #faculties="routerLinkActive">
-<!--         [ngClass]="{ 'active': faculties.isActive }">-->
-        {{ faculty.name | titlecase }}
-      </a>
-    </li>
-<!--    <li class="nav-item">-->
-<!--      &lt;!&ndash; upload docentes route &ndash;&gt;-->
-<!--      <a [routerLink]="['carreras']" class="nav-link text-center" routerLinkActive #degrees="routerLinkActive"-->
-<!--         [ngClass]="{ 'active': degrees.isActive }">-->
-<!--        Carreras-->
-<!--      </a>-->
-<!--    </li>-->
-<!--    <li class="nav-item">-->
-<!--      &lt;!&ndash; upload docentes route &ndash;&gt;-->
-<!--      <a [routerLink]="['docentes']" class="nav-link text-center" routerLinkActive #teachers="routerLinkActive"-->
-<!--         [ngClass]="{ 'active': teachers.isActive }">-->
-<!--        Docentes-->
-<!--      </a>-->
-<!--    </li>-->
-  </ul>
+
+  <!--  info icon-->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path
+        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+  </svg>
+
+  <div class="alert alert-primary d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+      <use xlink:href="#info-fill"/>
+    </svg>
+    <div>
+      Docentes que participan en el Proyecto Docente Integrador en el periodo académico {{ academicPeriod.name | titlecase }}.
+    </div>
+  </div>
+</div>
+
+<div class="container mt-3">
+  <select class="form-select" aria-label="Default select example" (change)="changeFilter($event)">
+    <option selected value="all">Todos</option>
+    <option *ngFor="let faculty of faculties" [value]="faculty.id">{{ faculty.name | titlecase }}</option>
+  </select>
+</div>
+
+<div class="container mt-3">
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Nombres y apellidos</th>
+      <th scope="col">Carrera</th>
+      <th scope="col">Facultad</th>
+      <!--      TODO: Agregar modalidad a los docentes-->
+      <!--      <th scope="col">Modalidad</th>-->
+      <th scope="col">Ciclo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let teacher of filteredTeachers; let i = index">
+      <th scope="row">{{ i + 1 | number }}</th>
+      <td>{{ teacher.displayName | titlecase }}</td>
+      <td>{{ teacher.degree.name | titlecase }}</td>
+      <td>{{ teacher.faculty.name | titlecase }}</td>
+      <td>{{ teacher.cycle }}</td>
+    </tr>
+    </tbody>
+  </table>
+
 </div>

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { Observable } from 'rxjs';
 import { map, mergeMap, shareReplay } from 'rxjs/operators';
-import { Activity } from '../../models/activity';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
 import { IntegrativeTeacher } from '../../models/integrative-teacher';
+import { AcademicPeriodsService } from './academic-period.service';
 
 const INTEGRATIVE_TEACHERS_COLLECTION_NAME = 'integrative-teachers';
 
@@ -17,6 +17,8 @@ export class IntegrativeTeacherService {
 
   constructor(
     private angularFirestore: AngularFirestore,
+    private academicPeriodsService: AcademicPeriodsService,
+    private readonly angularFirePerformance: AngularFirePerformance
   ) { }
 
   public async updatePlanningStatus(integrativeTeacherId: string, planningStatus: string): Promise<void> {
@@ -24,6 +26,29 @@ export class IntegrativeTeacherService {
       { planningStatus },
       { merge: true }
     );
+  }
+
+  /**
+   * Get Integrative Teachers of a period
+   * @param periodId Identifier of the period
+   */
+  public getIntegrativeTeachersOfPeriod(periodId: string): Observable<Array<IntegrativeTeacher>> {
+    const periodReference = this.academicPeriodsService.periodReference(periodId);
+    return this.angularFirestore.collection<IntegrativeTeacher>(
+      INTEGRATIVE_TEACHERS_COLLECTION_NAME,
+      query => {
+        return query.orderBy('displayName')
+          .where('period.reference', '==', periodReference);
+      }
+    )
+      .valueChanges()
+      .pipe(
+        mergeMap(async doc => {
+          await this.angularFirePerformance.trace('list-teachers-of-a-period');
+          return doc;
+        }),
+        shareReplay(1)
+      );
   }
 
   /**
