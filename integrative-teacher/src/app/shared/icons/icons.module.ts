@@ -22,7 +22,8 @@ import {
   Edit,
   Delete,
   ExternalLink,
-  Trash2
+  Trash2,
+  ChevronRight
 } from 'angular-feather/icons';
 
 // Check all icons available: https://github.com/michaelbazos/angular-feather
@@ -50,7 +51,8 @@ const icons = {
   Edit,
   Delete,
   ExternalLink,
-  Trash2
+  Trash2,
+  ChevronRight
 };
 
 @NgModule({

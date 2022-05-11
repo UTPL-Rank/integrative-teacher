@@ -37,6 +37,7 @@
       <!--      TODO: Agregar modalidad a los docentes-->
       <!--      <th scope="col">Modalidad</th>-->
       <th scope="col">Ciclo</th>
+      <th scope="col">Planificación</th>
     </tr>
     </thead>
     <tbody>
@@ -46,6 +47,11 @@
       <td>{{ teacher.degree.name | titlecase }}</td>
       <td>{{ teacher.faculty.name | titlecase }}</td>
       <td>{{ teacher.cycle }}</td>
+      <td class="align-content-center">
+        <a [routerLink]="[teacher.id]" type="button" class="btn">
+          Ver actividades <i-feather class="fas" name="chevron-right"></i-feather>
+        </a>
+      </td>
     </tr>
     </tbody>
   </table>
