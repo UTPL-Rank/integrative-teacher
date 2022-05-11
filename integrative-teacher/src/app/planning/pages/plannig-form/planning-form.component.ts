@@ -98,11 +98,11 @@ export class PlanningFormComponent implements OnInit {
           this.activities = activities;
         });
 
-      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId)
-        .subscribe(integrativeTeacher => {
-            this.integrativeTeacher = integrativeTeacher;
-          }
-        );
+      // this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId)
+      //   .subscribe(integrativeTeacher => {
+      //       this.integrativeTeacher = integrativeTeacher;
+      //     }
+      //   );
     });
   }
 
