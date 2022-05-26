@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AcademicPeriod } from '../../../models/academic-period';
 import { UserClaims } from '../../../models/user-claims';
-import { IntegrativeUser } from '../../../models/integrative-user';
 // @ts-ignore
 import { User } from 'firebase/app';
-import {UserService} from "../../../core/services/user.service";
+import { UserService } from '../../../core/services/user.service';
 
 
 @Component({
