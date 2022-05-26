@@ -1,0 +1,128 @@
+.navbar {
+  background: var(--color-primary);
+}
+
+.user-btn {
+  background: #ffffff;
+}
+
+.contenedor{
+  //position: relative;
+  display: inline-block;
+  text-align: center;
+  color: white;
+}
+
+//.card{
+//  height: 70%;
+//  width: 30rem;
+//}
+
+//.img-header{
+// width: 80%;
+  //height: auto;
+  //object-fit: cover;
+//}
+
+.texto-encima{
+  //position: absolute;
+  top: 40px;
+  left: 40px;
+}
+.centrado{
+  //position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.rectanguloPiePagina{
+  margin: auto;
+  text-align: center;
+  background-color: #050D28;
+  font-family: Arial;
+  color: white;
+  padding: 1rem;
+}
+
+.footer {
+  height: 10%;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  grid-auto-rows: 2rem;
+  grid-template-areas:
+        ". article article article .";
+}
+
+.features1 {
+
+//  position: absolute;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  grid-auto-rows: 2rem;
+  grid-template-areas:
+        ". article article article article .";
+}
+
+.active{
+  color: var(--color-gray);
+  background-color: var(--color-secondary);
+}
+
+.feature{
+
+}
+
+.feature-icon{
+  width: 30px;
+  height: auto;
+}
+
+.feature-title{
+  background-color: #F7F7F7;
+}
+
+.feature-body{
+
+}
+
+.partners{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1rem;
+  grid-auto-rows: 2rem;
+  grid-template-areas:
+        "img img img";
+}
+
+.partner-img{
+  width: auto;
+  height: 5rem;
+}
+
+.profile{
+  //background-image: url("../src/assets/images/proffesional.jpg");
+  background-image: url("https://media.istockphoto.com/photos/high-school-professor-assisting-her-students-in-elearning-on-laptop-picture-id1361844238?b=1&k=20&m=1361844238&s=170667a&w=0&h=Zfr8eDZeaWrc4Kb_58-wgdQQHbj6Qcls55PP-OSWB2k=");
+background-repeat: no-repeat;
+  height: 40%;
+  width: auto;
+}
+
+.marco{
+  margin: auto;
+  padding: 1rem;
+}
+
+// mobile
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+  }
+}
+
