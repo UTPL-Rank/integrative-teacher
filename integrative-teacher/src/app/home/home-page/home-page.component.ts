@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../core/services/user.service';
+import firebase from 'firebase';
 
 @Component({
   selector: 'app-home-page',
@@ -7,12 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor(
+  public user!: firebase.User | null;
 
+  constructor(
+    private readonly auth: UserService,
   ) { }
 
   ngOnInit(): void {
+    this.auth.currentUser.subscribe(
+      user => this.user = user
+    );
+  }
 
+  signOut(): void{
+    this.auth.signOut(['/']).then();
   }
 
 }

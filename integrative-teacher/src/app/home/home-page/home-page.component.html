@@ -18,12 +18,16 @@
           <i-feather class="fas" name="user" style="color: var(--color-primary);"></i-feather>
         </button>
         <ul class="dropdown-menu dropdown-menu-md-end" aria-labelledby="dropdownMenuUser">
-          <li><a class="dropdown-item" href="#">Iniciar sesión</a></li>
-          <li>
+          <li *ngIf="!user"><a class="dropdown-item" [routerLink]="['/login']">Iniciar sesión</a></li>
+          <li *ngIf="user">
+            <a class="dropdown-item"> <b> {{ user!.email!.split('@')[0]}} </b> </a>
+          </li>
+          <li *ngIf="user">
             <hr class="dropdown-divider">
           </li>
-          <li><a class="dropdown-item" href="#">Ir al panel</a></li>
-          <li><a class="dropdown-item" href="#">Guía de usuario</a></li>
+          <li *ngIf="user"><a class="dropdown-item" [routerLink]="['/dashboard', 'home']" >Ir al panel</a></li>
+<!--          <li><a class="dropdown-item" href="#">Guía de usuario</a></li>-->
+          <li *ngIf="user"><a class="dropdown-item" (click)="signOut()" >Cerrar sesión</a></li>
         </ul>
       </div>
     </div>
