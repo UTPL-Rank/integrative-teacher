@@ -14,6 +14,7 @@ import {
   Upload,
   Download,
   Users,
+  User,
   Printer,
   Grid,
   Menu,
@@ -23,10 +24,13 @@ import {
   Delete,
   ExternalLink,
   Trash2,
-  ChevronRight
+  ChevronRight,
+  Trello,
+  Award,
+  Bookmark
 } from 'angular-feather/icons';
 
-// Check all icons available: https://github.com/michaelbazos/angular-feather
+// Check all icons available: https://feathericons.com/
 
 // Select some icons (use an object, not an array)
 const icons = {
@@ -42,6 +46,7 @@ const icons = {
   FilePlus,
   FileText,
   Users,
+  User,
   Archive,
   Printer,
   Grid,
@@ -52,7 +57,10 @@ const icons = {
   Delete,
   ExternalLink,
   Trash2,
-  ChevronRight
+  ChevronRight,
+  Trello,
+  Award,
+  Bookmark
 };
 
 @NgModule({
