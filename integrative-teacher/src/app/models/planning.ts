@@ -1,7 +1,7 @@
 import { DocumentReference } from '@angular/fire/firestore';
 
 export interface Planning {
-    id: string;
+    id?: string;
     integrativeTeacherId: string;
     degree: {
         reference: DocumentReference;

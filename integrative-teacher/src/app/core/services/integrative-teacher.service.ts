@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { Observable } from 'rxjs';
 import { map, mergeMap, shareReplay } from 'rxjs/operators';
@@ -69,5 +69,19 @@ export class IntegrativeTeacherService {
     return this.integrativeTeacherDocument(integrativeTeacherId).get().pipe(
       map(snap => (snap.data() as IntegrativeTeacher))
     );
+  }
+
+  /**
+   * Get integrative-teachers collection
+   */
+  public integrativeTeachersCollection(): AngularFirestoreCollection<IntegrativeTeacher> {
+    return this.angularFirestore.collection<IntegrativeTeacher>(INTEGRATIVE_TEACHERS_COLLECTION_NAME);
+  }
+
+  /**
+   * Get all plannings
+   */
+  public integrativeTeachers(): Observable<Array<IntegrativeTeacher>> {
+    return this.integrativeTeachersCollection().valueChanges();
   }
 }

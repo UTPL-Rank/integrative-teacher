@@ -7,13 +7,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SigCanvasComponent } from '../../../shared/components/sig-canvas/sig-canvas.component';
 import Swal from 'sweetalert2';
 import { IntegrativeTeacherService } from '../../../core/services/integrative-teacher.service';
-import { IntegrativeTeacher } from '../../../models/integrative-teacher';
+import {IntegrativeTeacher, IntegrativeTeacherV2} from '../../../models/integrative-teacher';
 import { UserService } from '../../../core/services/user.service';
 import { IntegrativeUser } from '../../../models/integrative-user';
 import { ActivatedRoute, Params } from '@angular/router';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
+import {PlanningService} from "../../../core/services/planning.service";
+import {Planning} from "../../../models/planning";
+import {DocumentReference} from "@angular/fire/firestore";
+import {IntegrativeTeacherV2Service} from "../../../core/services/integrative-teacher-v2.service";
 
 @Component({
   selector: 'app-plannig-form',
@@ -27,6 +31,10 @@ export class PlanningFormComponent implements OnInit {
   public editAnActivity!: boolean;
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
+
+  // test
+
+  public integrativeTeachers!: IntegrativeTeacher[];
 
   public integrativeTeacher!: IntegrativeTeacher;
   public teachers: Array<ATeacher> = [];
@@ -46,6 +54,8 @@ export class PlanningFormComponent implements OnInit {
     private integrativeTeacherService: IntegrativeTeacherService,
     private teacherService: TeacherService,
     private activityService: ActivityService,
+    private planningService: PlanningService,
+    private integrativeTeacherV2Service: IntegrativeTeacherV2Service,
     private userService: UserService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
@@ -104,6 +114,55 @@ export class PlanningFormComponent implements OnInit {
       //     }
       //   );
     });
+
+    // save integrative-teacher-v2
+
+    this.integrativeTeacherService.integrativeTeachers().subscribe(
+      its => {
+        this.integrativeTeachers = its;
+        console.log(this.integrativeTeachers);
+        this.integrativeTeachers.map(
+          it => {
+            const np: IntegrativeTeacherV2 = {
+              email: it.email,
+              displayName: it.displayName,
+              period: it.period
+            };
+
+            this.integrativeTeacherV2Service.saveIntegrativeTeacher(np).subscribe(
+              created => console.log('Saved in DB -> ', created)
+            );
+          }
+        );
+      }
+    );
+
+    // save planning
+
+    // this.integrativeTeacherService.integrativeTeachers().subscribe(
+    //   its => {
+    //     this.integrativeTeachers = its;
+    //     console.log(this.integrativeTeachers);
+    //     this.integrativeTeachers.map(
+    //       it => {
+    //         const np: Planning = {
+    //           id: `${it.period.reference.id}-${it.degree.reference.id}-${it.email.split('@')[0]}-${it.cycle}`,
+    //           integrativeTeacherId: it.id,
+    //           degree: it.degree,
+    //           faculty: it.faculty,
+    //           modality: '',
+    //           cycle: it.cycle,
+    //           planningStatus: it.planningStatus
+    //         };
+    //
+    //         this.planningService.savePlanning(np).subscribe(
+    //           created => console.log('Saved in DB -> ', created)
+    //         );
+    //       }
+    //     );
+    //   }
+    // );
+
   }
 
   changeEditPlanning(e: any): void {
@@ -265,7 +324,7 @@ export class PlanningFormComponent implements OnInit {
   exportToPDF(): void {
 
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.integrativeTeacher.degree.name.toUpperCase()}</b></p>`);
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.integrativeTeacher.degree!.name.toUpperCase()}</b></p>`);
 
     // Define optional configuration
     const options = {
