@@ -13,6 +13,7 @@ import { IntegrativeUser } from '../../../models/integrative-user';
 import { ActivatedRoute, Params } from '@angular/router';
 import { PlanningService } from '../../../core/services/planning.service';
 import { IntegrativeTeacherV2Service } from '../../../core/services/integrative-teacher-v2.service';
+import { Planning } from '../../../models/planning';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
@@ -34,7 +35,8 @@ export class PlanningFormComponent implements OnInit {
 
   public integrativeTeachers!: IntegrativeTeacher[];
 
-  public integrativeTeacher!: IntegrativeTeacher;
+  public integrativeTeacher!: IntegrativeTeacherV2;
+  public planning!: Planning;
   public teachers: Array<ATeacher> = [];
   public activities: Array<Activity> = [];
   public currentUser!: IntegrativeUser | null;
@@ -42,6 +44,7 @@ export class PlanningFormComponent implements OnInit {
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
   private integrativeTeacherId!: string;
+  private planningId!: string;
 
   teacherForm: FormGroup;
   activityForm: FormGroup;
@@ -90,10 +93,15 @@ export class PlanningFormComponent implements OnInit {
 
     this.route.params.subscribe((params: Params) => {
       this.integrativeTeacherId = params.integrativeTeacherId;
+      this.planningId = params.planningId;
 
-      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
+      this.integrativeTeacherV2Service.integrativeTeacherById(this.integrativeTeacherId).
         subscribe(
           integrativeTeacher => this.integrativeTeacher = integrativeTeacher
+      );
+
+      this.planningService.planningById(this.planningId).subscribe(
+        planning => this.planning = planning
       );
 
       this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
@@ -161,6 +169,42 @@ export class PlanningFormComponent implements OnInit {
     //   }
     // );
 
+    // update teachers planning
+
+    // this.planningService.plannings().subscribe(
+    //   plannings => {
+    //     plannings.map(
+    //       planning => {
+    //         this.teacherService.getTeachersOfAIntegrativeTeacher(planning.integrativeTeacherId).subscribe(
+    //           teachers => {
+    //             teachers.map(teacher => {
+    //               teacher.planningId = planning.id;
+    //               this.teacherService.saveTeacher2(teacher).subscribe(teacherUpdated => console.log('teacherUpdated -> ', teacherUpdated));
+    //             });
+    //           });
+    //       }
+    //     );
+    //   }
+    // );
+
+    // update activity planning
+
+    // this.planningService.plannings().subscribe(
+    //   plannings => {
+    //     plannings.map(
+    //       planning => {
+    //         this.activityService.getActivitiesOfATeacher(planning.integrativeTeacherId).subscribe(
+    //           activities => {
+    //             activities.map(activity => {
+    //               activity.planningId = planning.id;
+    //               this.activityService.saveActivity2(activity).subscribe(activityUpdated => console.log('activityUpdated -> ', activityUpdated));
+    //             });
+    //           });
+    //       }
+    //     );
+    //   }
+    // );
+
   }
 
   changeEditPlanning(e: any): void {
@@ -171,30 +215,32 @@ export class PlanningFormComponent implements OnInit {
     }
   }
 
+  // TODO: Cambiar estado de planificacion en plannig collection
+
   changeCompletedPlanning(e: any): void {
-    if (e.target.checked) {
-      this.integrativeTeacher.planningStatus = 'completa';
-      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
-        .then(
-          success => {
-            Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
-          },
-          error => {
-            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
-          }
-      );
-    } else {
-      this.integrativeTeacher.planningStatus = 'incompleta';
-      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
-        .then(
-          success => {
-            Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
-          },
-          error => {
-            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
-          }
-        );
-    }
+    // if (e.target.checked) {
+    //   this.integrativeTeacher.planningStatus = 'completa';
+    //   this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+    //     .then(
+    //       success => {
+    //         Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
+    //       },
+    //       error => {
+    //         Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+    //       }
+    //   );
+    // } else {
+    //   this.integrativeTeacher.planningStatus = 'incompleta';
+    //   this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+    //     .then(
+    //       success => {
+    //         Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
+    //       },
+    //       error => {
+    //         Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+    //       }
+    //     );
+    // }
   }
 
   saveTeacher(): void {
@@ -322,7 +368,7 @@ export class PlanningFormComponent implements OnInit {
   exportToPDF(): void {
 
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.integrativeTeacher.degree!.name.toUpperCase()}</b></p>`);
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.planning.degree!.name.toUpperCase()}</b></p>`);
 
     // Define optional configuration
     const options = {

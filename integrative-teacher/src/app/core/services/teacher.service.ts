@@ -3,12 +3,11 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { from, Observable, of } from 'rxjs';
-
 import { catchError, mergeMap, shareReplay} from 'rxjs/operators';
-
 import { ATeacher } from '../../models/a-teacher';
 
 const TEACHERS_COLLECTION_NAME = 'teachers';
+const TEACHERS_BACKUP_COLLECTION_NAME = 'teachers-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +15,7 @@ const TEACHERS_COLLECTION_NAME = 'teachers';
 export class TeacherService {
 
   private teachersReference: AngularFirestoreCollection;
+  private teachersReference2: AngularFirestoreCollection;
 
   constructor(
     private angularFireStorage: AngularFireStorage,
@@ -23,6 +23,7 @@ export class TeacherService {
     private readonly angularFirePerformance: AngularFirePerformance
   ) {
     this.teachersReference = this.angularFirestore.collection(TEACHERS_COLLECTION_NAME);
+    this.teachersReference2 = this.angularFirestore.collection(TEACHERS_BACKUP_COLLECTION_NAME);
   }
 
 
@@ -37,10 +38,31 @@ export class TeacherService {
     return saveProcess;
   }
 
+  public saveTeacher2(teacher: ATeacher): Observable<ATeacher | null> {
+    const saveProcess = from(this.createTeacher2(teacher)).pipe(
+      mergeMap(async (acc) => await this.saveInDB2(acc)),
+      catchError((err) => {
+        console.log('Error saving teacher: ', err);
+        return of(null);
+      })
+    );
+    return saveProcess;
+  }
 
   private async createTeacher(teacher: ATeacher): Promise<ATeacher> {
     const teacherCreated: ATeacher =  {
       id: `${ (new Date()).valueOf() }`, // Date Integer
+      integrativeTeacher: teacher.integrativeTeacher,
+      displayName: teacher.displayName,
+      subject: teacher.subject
+    };
+    return teacherCreated;
+  }
+
+  private async createTeacher2(teacher: ATeacher): Promise<ATeacher> {
+    const teacherCreated: ATeacher =  {
+      id: teacher.id,
+      planningId: teacher.planningId,
       integrativeTeacher: teacher.integrativeTeacher,
       displayName: teacher.displayName,
       subject: teacher.subject
@@ -58,27 +80,41 @@ export class TeacherService {
     return teacher;
   }
 
+  private async saveInDB2(teacher: ATeacher): Promise<ATeacher> {
+
+    const batch = this.angularFirestore.firestore.batch();
+    const teacherReference = this.teachersReference2.doc(`${teacher.id}`).ref;
+    batch.set(teacherReference, teacher);
+    await batch.commit();
+
+    return teacher;
+  }
+
   setTeacher(teacher: ATeacher): Promise<any> {
     return this.teachersReference.doc(teacher.id).set(teacher);
   }
 
+  // updateTeacher(teacher: ATeacher): Promise<any> {
+  //   return this.teachersReference.doc(teacher.id).update({
+  //     displayName: teacher.displayName,
+  //     subject: teacher.subject
+  //   });
+  // }
+
   updateTeacher(teacher: ATeacher): Promise<any> {
-    return this.teachersReference.doc(teacher.id).update({
-      displayName: teacher.displayName,
-      subject: teacher.subject
-    });
+    return this.teachersReference.doc(teacher.id).update(teacher);
   }
 
   deleteTeacher(id: string | undefined): Promise<any> {
     return this.teachersReference.doc(id).delete();
   }
 
-  public getTeachersOfAIntegrativeTeacher(username: string): Observable<Array<ATeacher>> {
+  public getTeachersOfAIntegrativeTeacher(integrativeTeacherId: string): Observable<Array<ATeacher>> {
     return this.angularFirestore.collection<ATeacher>(
       TEACHERS_COLLECTION_NAME,
       query => {
         return query.orderBy('displayName')
-          .where('integrativeTeacher', '==', username);
+          .where('integrativeTeacher', '==', integrativeTeacherId);
       }
     )
       .valueChanges()
@@ -89,6 +125,20 @@ export class TeacherService {
         }),
         shareReplay(1)
       );
+  }
+
+  /**
+   * Get activities collection
+   */
+  public teachersCollection(): AngularFirestoreCollection<ATeacher> {
+    return this.angularFirestore.collection<ATeacher>(TEACHERS_COLLECTION_NAME);
+  }
+
+  /**
+   * Get all activities
+   */
+  public allTeachers(): Observable<Array<ATeacher>> {
+    return this.teachersCollection().valueChanges();
   }
 
 }

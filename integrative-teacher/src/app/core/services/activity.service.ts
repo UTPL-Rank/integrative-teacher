@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import firestore = firebase.firestore;
 
 const ACTIVITIES_COLLECTION_NAME = 'activities';
+const ACTIVITIES_2_COLLECTION_NAME = 'activities-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ const ACTIVITIES_COLLECTION_NAME = 'activities';
 export class ActivityService {
 
   private activitiesReference: AngularFirestoreCollection;
+  private activitiesReference2: AngularFirestoreCollection;
 
   constructor(
     private angularFireStorage: AngularFireStorage,
@@ -23,11 +25,22 @@ export class ActivityService {
     private readonly angularFirePerformance: AngularFirePerformance
   ) {
     this.activitiesReference = this.angularFirestore.collection(ACTIVITIES_COLLECTION_NAME);
+    this.activitiesReference2 = this.angularFirestore.collection(ACTIVITIES_2_COLLECTION_NAME);
   }
 
   public saveActivity(activity: Activity): Observable<Activity | null> {
     const saveProcess = from(this.createActivity(activity)).pipe(
       mergeMap(async (acc) => await this.saveInDB(acc)),
+      catchError((err) => {
+        return of(null);
+      })
+    );
+    return saveProcess;
+  }
+
+  public saveActivity2(activity: Activity): Observable<Activity | null> {
+    const saveProcess = from(this.createActivity2(activity)).pipe(
+      mergeMap(async (acc) => await this.saveInDB2(acc)),
       catchError((err) => {
         return of(null);
       })
@@ -51,9 +64,35 @@ export class ActivityService {
     return activityCreated;
   }
 
+  private async createActivity2(activity: Activity): Promise<Activity> {
+    const activityCreated: Activity =  {
+      id: activity.id,
+      planningId: activity.planningId,
+      integrativeTeacher: activity.integrativeTeacher,
+      description: activity.description,
+      goal: activity.goal,
+      createdAt: activity.createdAt,
+      startDate: activity.startDate,
+      endDate: activity.endDate,
+      evidence: activity.evidence,
+      indicator: activity.indicator,
+      status: activity.status
+    };
+    return activityCreated;
+  }
+
   private async saveInDB(activity: Activity): Promise<Activity> {
     const batch = this.angularFirestore.firestore.batch();
     const activityReference = this.activitiesReference.doc(`${activity.id}`).ref;
+    batch.set(activityReference, activity);
+    await batch.commit();
+
+    return activity;
+  }
+
+  private async saveInDB2(activity: Activity): Promise<Activity> {
+    const batch = this.angularFirestore.firestore.batch();
+    const activityReference = this.activitiesReference2.doc(`${activity.id}`).ref;
     batch.set(activityReference, activity);
     await batch.commit();
 
@@ -99,13 +138,12 @@ export class ActivityService {
     return this.activitiesReference.doc(id).delete();
   }
 
-  public getActivitiesOfATeacher(username: string): Observable<Array<Activity>> {
+  public getActivitiesOfATeacher(integrativeTeacherId: string): Observable<Array<Activity>> {
     return this.angularFirestore.collection<Activity>(
       ACTIVITIES_COLLECTION_NAME,
       query => {
-        // const teacherReference = this.userService.userDocument(username).ref;
         return query.orderBy('createdAt')
-          .where('integrativeTeacher', '==', username);
+          .where('integrativeTeacher', '==', integrativeTeacherId);
       }
     )
       .valueChanges()
@@ -116,5 +154,19 @@ export class ActivityService {
         }),
         shareReplay(1)
       );
+  }
+
+  /**
+   * Get activities collection
+   */
+  public activitiesCollection(): AngularFirestoreCollection<Activity> {
+    return this.angularFirestore.collection<Activity>(ACTIVITIES_COLLECTION_NAME);
+  }
+
+  /**
+   * Get all activities
+   */
+  public allActivities(): Observable<Array<Activity>> {
+    return this.activitiesCollection().valueChanges();
   }
 }
