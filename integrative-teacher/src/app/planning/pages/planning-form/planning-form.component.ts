@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SigCanvasComponent } from '../../../shared/components/sig-canvas/sig-canvas.component';
 import Swal from 'sweetalert2';
 import { IntegrativeTeacherService } from '../../../core/services/integrative-teacher.service';
-import {IntegrativeTeacher, IntegrativeTeacherV2} from '../../../models/integrative-teacher';
+import { IntegrativeTeacherV2 } from '../../../models/integrative-teacher';
 import { UserService } from '../../../core/services/user.service';
 import { IntegrativeUser } from '../../../models/integrative-user';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -31,15 +31,10 @@ export class PlanningFormComponent implements OnInit {
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
 
-  // test
-
-  public integrativeTeachers!: IntegrativeTeacher[];
-
   public integrativeTeacher!: IntegrativeTeacherV2;
   public planning!: Planning;
   public teachers: Array<ATeacher> = [];
   public activities: Array<Activity> = [];
-  public currentUser!: IntegrativeUser | null;
 
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
@@ -48,8 +43,6 @@ export class PlanningFormComponent implements OnInit {
 
   teacherForm: FormGroup;
   activityForm: FormGroup;
-
-  public teacherNameAndJob = '';
 
   constructor(
     private integrativeTeacherService: IntegrativeTeacherService,
@@ -104,107 +97,16 @@ export class PlanningFormComponent implements OnInit {
         planning => this.planning = planning
       );
 
-      this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
+      this.teacherService.getTeachersOfPlanning(this.planningId)
         .subscribe(teachers => {
           this.teachers = teachers;
         });
 
-      this.activityService.getActivitiesOfATeacher(this.integrativeTeacherId)
+      this.activityService.getActivitiesOfPlanning(this.planningId)
         .subscribe(activities => {
           this.activities = activities;
         });
-
-      // this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId)
-      //   .subscribe(integrativeTeacher => {
-      //       this.integrativeTeacher = integrativeTeacher;
-      //     }
-      //   );
     });
-
-    // save integrative-teacher-v2
-
-    // this.integrativeTeacherService.integrativeTeachers().subscribe(
-    //   its => {
-    //     this.integrativeTeachers = its;
-    //     console.log(this.integrativeTeachers);
-    //     this.integrativeTeachers.map(
-    //       it => {
-    //         const np: IntegrativeTeacherV2 = {
-    //           email: it.email,
-    //           displayName: it.displayName,
-    //           period: it.period
-    //         };
-    //
-    //         this.integrativeTeacherV2Service.saveIntegrativeTeacher(np).subscribe(
-    //           created => console.log('Saved in DB -> ', created)
-    //         );
-    //       }
-    //     );
-    //   }
-    // );
-
-    // save planning
-
-    // this.integrativeTeacherService.integrativeTeachers().subscribe(
-    //   its => {
-    //     this.integrativeTeachers = its;
-    //     console.log(this.integrativeTeachers);
-    //     this.integrativeTeachers.map(
-    //       it => {
-    //         const np: Planning = {
-    //           id: `${it.period.reference.id}-${it.degree.reference.id}-${it.email.split('@')[0]}-${it.cycle}`,
-    //           integrativeTeacherId: it.id,
-    //           degree: it.degree,
-    //           faculty: it.faculty,
-    //           modality: '',
-    //           cycle: it.cycle,
-    //           planningStatus: it.planningStatus
-    //         };
-    //
-    //         this.planningService.savePlanning(np).subscribe(
-    //           created => console.log('Saved in DB -> ', created)
-    //         );
-    //       }
-    //     );
-    //   }
-    // );
-
-    // update teachers planning
-
-    // this.planningService.plannings().subscribe(
-    //   plannings => {
-    //     plannings.map(
-    //       planning => {
-    //         this.teacherService.getTeachersOfAIntegrativeTeacher(planning.integrativeTeacherId).subscribe(
-    //           teachers => {
-    //             teachers.map(teacher => {
-    //               teacher.planningId = planning.id;
-    //               this.teacherService.saveTeacher2(teacher).subscribe(teacherUpdated => console.log('teacherUpdated -> ', teacherUpdated));
-    //             });
-    //           });
-    //       }
-    //     );
-    //   }
-    // );
-
-    // update activity planning
-
-    // this.planningService.plannings().subscribe(
-    //   plannings => {
-    //     plannings.map(
-    //       planning => {
-    //         this.activityService.getActivitiesOfATeacher(planning.integrativeTeacherId).subscribe(
-    //           activities => {
-    //             activities.map(activity => {
-    //               activity.planningId = planning.id;
-    //               this.activityService.saveActivity2(activity).subscribe(activityUpdated => console.log('activityUpdated -> ', activityUpdated));
-    //             });
-    //           });
-    //       }
-    //     );
-    //   }
-    // );
-
   }
 
   changeEditPlanning(e: any): void {
@@ -215,32 +117,30 @@ export class PlanningFormComponent implements OnInit {
     }
   }
 
-  // TODO: Cambiar estado de planificacion en plannig collection
-
   changeCompletedPlanning(e: any): void {
-    // if (e.target.checked) {
-    //   this.integrativeTeacher.planningStatus = 'completa';
-    //   this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
-    //     .then(
-    //       success => {
-    //         Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
-    //       },
-    //       error => {
-    //         Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
-    //       }
-    //   );
-    // } else {
-    //   this.integrativeTeacher.planningStatus = 'incompleta';
-    //   this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
-    //     .then(
-    //       success => {
-    //         Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
-    //       },
-    //       error => {
-    //         Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
-    //       }
-    //     );
-    // }
+    if (e.target.checked) {
+      this.planning.planningStatus = 'completa';
+      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
+        .then(
+          success => {
+            Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
+          },
+          error => {
+            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+          }
+      );
+    } else {
+      this.planning.planningStatus = 'incompleta';
+      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
+        .then(
+          success => {
+            Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
+          },
+          error => {
+            Swal.fire({title: 'Ocurrió un error. Intenta nuevamente.', icon: 'error'}).then();
+          }
+        );
+    }
   }
 
   saveTeacher(): void {
@@ -248,7 +148,8 @@ export class PlanningFormComponent implements OnInit {
     const newTeacher: ATeacher = {
       displayName: this.teacherForm.value.name,
       subject: this.teacherForm.value.subject,
-      integrativeTeacher: this.integrativeTeacherId
+      integrativeTeacher: this.integrativeTeacherId,
+      planningId: this.planningId
     };
 
     if (!this.editATeacher) {
@@ -286,7 +187,8 @@ export class PlanningFormComponent implements OnInit {
       endDate: this.activityForm.value.endDate,
       evidence: this.activityForm.value.evidence,
       indicator: this.activityForm.value.indicator,
-      integrativeTeacher: this.integrativeTeacherId
+      integrativeTeacher: this.integrativeTeacherId,
+      planningId: this.planningId
     };
 
     if (!this.editAnActivity) {

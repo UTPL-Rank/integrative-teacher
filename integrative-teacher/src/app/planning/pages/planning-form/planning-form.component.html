@@ -39,7 +39,8 @@
     </div>
 
     <div class="row card-body">
-      <h3 class="section-title" align="center"> Planificación del Docente Integrador </h3>
+      <h6 class="section-title" align="center"><small><b> {{ 'Planificación del Docente Integrador' | uppercase }} </b></small></h6>
+      <h6 class="section-title" align="center"><small> MODALIDAD {{ planning?.modality! | uppercase }} </small></h6>
 <!--      TODO: Add academic period-->
     </div>
 
@@ -66,10 +67,6 @@
         <tr>
           <th scope="row">Periodo Académico</th>
           <td> {{ integrativeTeacher?.period?.name }} </td>
-        </tr>
-        <tr>
-          <th scope="row">Modalidad</th>
-          <td> {{ planning?.modality! | titlecase }} </td>
         </tr>
         </tbody>
       </table>

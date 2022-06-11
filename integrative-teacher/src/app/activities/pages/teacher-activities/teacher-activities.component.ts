@@ -26,7 +26,7 @@ export class TeacherActivitiesComponent implements OnInit {
 
     this.route.params.subscribe((params: Params) => {
       this.teacherUsername = params.teacherId;
-      this.activitySubscription = this.activityService.getActivitiesOfATeacher(this.teacherUsername)
+      this.activitySubscription = this.activityService.getActivitiesOfPlanning(this.teacherUsername)
         .subscribe(activities => {
           this.activities = activities;
         });

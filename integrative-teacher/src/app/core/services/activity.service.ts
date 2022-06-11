@@ -8,8 +8,8 @@ import { Activity } from '../../models/activity';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
 
-const ACTIVITIES_COLLECTION_NAME = 'activities';
-const ACTIVITIES_2_COLLECTION_NAME = 'activities-v2';
+const ACTIVITIES_COLLECTION_NAME = 'activities-v2';
+// const ACTIVITIES_2_COLLECTION_NAME = 'activities-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ const ACTIVITIES_2_COLLECTION_NAME = 'activities-v2';
 export class ActivityService {
 
   private activitiesReference: AngularFirestoreCollection;
-  private activitiesReference2: AngularFirestoreCollection;
+  // private activitiesReference2: AngularFirestoreCollection;
 
   constructor(
     private angularFireStorage: AngularFireStorage,
@@ -25,7 +25,7 @@ export class ActivityService {
     private readonly angularFirePerformance: AngularFirePerformance
   ) {
     this.activitiesReference = this.angularFirestore.collection(ACTIVITIES_COLLECTION_NAME);
-    this.activitiesReference2 = this.angularFirestore.collection(ACTIVITIES_2_COLLECTION_NAME);
+    // this.activitiesReference2 = this.angularFirestore.collection(ACTIVITIES_2_COLLECTION_NAME);
   }
 
   public saveActivity(activity: Activity): Observable<Activity | null> {
@@ -38,15 +38,15 @@ export class ActivityService {
     return saveProcess;
   }
 
-  public saveActivity2(activity: Activity): Observable<Activity | null> {
-    const saveProcess = from(this.createActivity2(activity)).pipe(
-      mergeMap(async (acc) => await this.saveInDB2(acc)),
-      catchError((err) => {
-        return of(null);
-      })
-    );
-    return saveProcess;
-  }
+  // public saveActivity2(activity: Activity): Observable<Activity | null> {
+  //   const saveProcess = from(this.createActivity2(activity)).pipe(
+  //     mergeMap(async (acc) => await this.saveInDB2(acc)),
+  //     catchError((err) => {
+  //       return of(null);
+  //     })
+  //   );
+  //   return saveProcess;
+  // }
 
   private async createActivity(activity: Activity): Promise<Activity> {
     const activityCreated: Activity =  {
@@ -59,27 +59,28 @@ export class ActivityService {
       endDate: activity.endDate,
       evidence: activity.evidence,
       indicator: activity.indicator,
-      status: 'planificada'
+      status: 'planificada',
+      planningId: activity.planningId
     };
     return activityCreated;
   }
 
-  private async createActivity2(activity: Activity): Promise<Activity> {
-    const activityCreated: Activity =  {
-      id: activity.id,
-      planningId: activity.planningId,
-      integrativeTeacher: activity.integrativeTeacher,
-      description: activity.description,
-      goal: activity.goal,
-      createdAt: activity.createdAt,
-      startDate: activity.startDate,
-      endDate: activity.endDate,
-      evidence: activity.evidence,
-      indicator: activity.indicator,
-      status: activity.status
-    };
-    return activityCreated;
-  }
+  // private async createActivity2(activity: Activity): Promise<Activity> {
+  //   const activityCreated: Activity =  {
+  //     id: activity.id,
+  //     planningId: activity.planningId,
+  //     integrativeTeacher: activity.integrativeTeacher,
+  //     description: activity.description,
+  //     goal: activity.goal,
+  //     createdAt: activity.createdAt,
+  //     startDate: activity.startDate,
+  //     endDate: activity.endDate,
+  //     evidence: activity.evidence,
+  //     indicator: activity.indicator,
+  //     status: activity.status
+  //   };
+  //   return activityCreated;
+  // }
 
   private async saveInDB(activity: Activity): Promise<Activity> {
     const batch = this.angularFirestore.firestore.batch();
@@ -90,14 +91,14 @@ export class ActivityService {
     return activity;
   }
 
-  private async saveInDB2(activity: Activity): Promise<Activity> {
-    const batch = this.angularFirestore.firestore.batch();
-    const activityReference = this.activitiesReference2.doc(`${activity.id}`).ref;
-    batch.set(activityReference, activity);
-    await batch.commit();
-
-    return activity;
-  }
+  // private async saveInDB2(activity: Activity): Promise<Activity> {
+  //   const batch = this.angularFirestore.firestore.batch();
+  //   const activityReference = this.activitiesReference2.doc(`${activity.id}`).ref;
+  //   batch.set(activityReference, activity);
+  //   await batch.commit();
+  //
+  //   return activity;
+  // }
 
   public async updateActivityStatus(activityId: string, status: string): Promise<void> {
     return await this.activityReference(activityId).set(
@@ -138,18 +139,45 @@ export class ActivityService {
     return this.activitiesReference.doc(id).delete();
   }
 
-  public getActivitiesOfATeacher(integrativeTeacherId: string): Observable<Array<Activity>> {
+  /**
+   * Get the activities of a integrative teacher.
+   * @deprecated Use getActivitiesOfPlanning instead.
+   * @param integrativeTeacherId The id of the integrative teacher.
+   */
+  // public getActivitiesOfATeacher(integrativeTeacherId: string): Observable<Array<Activity>> {
+  //   return this.angularFirestore.collection<Activity>(
+  //     ACTIVITIES_COLLECTION_NAME,
+  //     query => {
+  //       return query.orderBy('createdAt')
+  //         .where('integrativeTeacher', '==', integrativeTeacherId);
+  //     }
+  //   )
+  //     .valueChanges()
+  //     .pipe(
+  //       mergeMap(async doc => {
+  //         await this.angularFirePerformance.trace('list-activities-of-a-teacher');
+  //         return doc;
+  //       }),
+  //       shareReplay(1)
+  //     );
+  // }
+
+  /**
+   * Get the activities of a planning.
+   * @param planningId The id of the planning.
+   */
+  public getActivitiesOfPlanning(planningId: string): Observable<Array<Activity>> {
     return this.angularFirestore.collection<Activity>(
       ACTIVITIES_COLLECTION_NAME,
       query => {
         return query.orderBy('createdAt')
-          .where('integrativeTeacher', '==', integrativeTeacherId);
+          .where('planningId', '==', planningId);
       }
     )
       .valueChanges()
       .pipe(
         mergeMap(async doc => {
-          await this.angularFirePerformance.trace('list-activities-of-a-teacher');
+          await this.angularFirePerformance.trace('list-activities-of-planning');
           return doc;
         }),
         shareReplay(1)

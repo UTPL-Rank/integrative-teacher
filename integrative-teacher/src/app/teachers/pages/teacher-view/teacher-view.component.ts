@@ -36,15 +36,15 @@ export class TeacherViewComponent implements OnInit {
         integrativeTeacher => this.integrativeTeacher = integrativeTeacher
       );
 
-      this.teacherService.getTeachersOfAIntegrativeTeacher(integrativeTeacherId)
-        .subscribe(teachers => {
-          this.teachers = teachers;
-        });
+      // this.teacherService.getTeachersOfAIntegrativeTeacher(integrativeTeacherId)
+      //   .subscribe(teachers => {
+      //     this.teachers = teachers;
+      //   });
 
-      this.activityService.getActivitiesOfATeacher(integrativeTeacherId)
-        .subscribe(activities => {
-          this.activities = activities;
-        });
+      // this.activityService.getActivitiesOfATeacher(integrativeTeacherId)
+      //   .subscribe(activities => {
+      //     this.activities = activities;
+      //   });
     });
   }
 
