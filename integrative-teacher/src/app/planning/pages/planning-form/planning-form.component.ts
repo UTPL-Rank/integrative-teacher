@@ -11,16 +11,14 @@ import {IntegrativeTeacher, IntegrativeTeacherV2} from '../../../models/integrat
 import { UserService } from '../../../core/services/user.service';
 import { IntegrativeUser } from '../../../models/integrative-user';
 import { ActivatedRoute, Params } from '@angular/router';
+import { PlanningService } from '../../../core/services/planning.service';
+import { IntegrativeTeacherV2Service } from '../../../core/services/integrative-teacher-v2.service';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
-import {PlanningService} from "../../../core/services/planning.service";
-import {Planning} from "../../../models/planning";
-import {DocumentReference} from "@angular/fire/firestore";
-import {IntegrativeTeacherV2Service} from "../../../core/services/integrative-teacher-v2.service";
 
 @Component({
-  selector: 'app-plannig-form',
+  selector: 'app-planning-form',
   templateUrl: './planning-form.component.html',
   styleUrls: ['./planning-form.component.scss']
 })
@@ -117,25 +115,25 @@ export class PlanningFormComponent implements OnInit {
 
     // save integrative-teacher-v2
 
-    this.integrativeTeacherService.integrativeTeachers().subscribe(
-      its => {
-        this.integrativeTeachers = its;
-        console.log(this.integrativeTeachers);
-        this.integrativeTeachers.map(
-          it => {
-            const np: IntegrativeTeacherV2 = {
-              email: it.email,
-              displayName: it.displayName,
-              period: it.period
-            };
-
-            this.integrativeTeacherV2Service.saveIntegrativeTeacher(np).subscribe(
-              created => console.log('Saved in DB -> ', created)
-            );
-          }
-        );
-      }
-    );
+    // this.integrativeTeacherService.integrativeTeachers().subscribe(
+    //   its => {
+    //     this.integrativeTeachers = its;
+    //     console.log(this.integrativeTeachers);
+    //     this.integrativeTeachers.map(
+    //       it => {
+    //         const np: IntegrativeTeacherV2 = {
+    //           email: it.email,
+    //           displayName: it.displayName,
+    //           period: it.period
+    //         };
+    //
+    //         this.integrativeTeacherV2Service.saveIntegrativeTeacher(np).subscribe(
+    //           created => console.log('Saved in DB -> ', created)
+    //         );
+    //       }
+    //     );
+    //   }
+    // );
 
     // save planning
 

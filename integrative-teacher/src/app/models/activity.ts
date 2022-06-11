@@ -1,6 +1,7 @@
 export interface Activity {
   id?: string;
   integrativeTeacher?: string;
+  planningId?: string;
   description: string;
   goal: string;
   createdAt?: Date;
