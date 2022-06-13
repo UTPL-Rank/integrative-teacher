@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { from, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, shareReplay } from 'rxjs/operators';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
-import { IntegrativeTeacherV2 } from '../../models/integrative-teacher';
+import {IntegrativeTeacher, IntegrativeTeacherV2} from '../../models/integrative-teacher';
+import { AngularFirePerformance } from '@angular/fire/performance';
+import { AcademicPeriodsService } from './academic-period.service';
 
 const INTEGRATIVE_TEACHERS_COLLECTION_NAME = 'integrative-teachers-v2';
 
@@ -14,7 +16,9 @@ const INTEGRATIVE_TEACHERS_COLLECTION_NAME = 'integrative-teachers-v2';
 export class IntegrativeTeacherV2Service {
 
   constructor(
-    private angularFirestore: AngularFirestore
+    private angularFirestore: AngularFirestore,
+    private readonly academicPeriodsService: AcademicPeriodsService,
+    private readonly angularFirePerformance: AngularFirePerformance
   ) { }
 
   public saveIntegrativeTeacher(integrativeTeacher: IntegrativeTeacherV2): Observable<IntegrativeTeacherV2 | null> {
@@ -83,4 +87,28 @@ export class IntegrativeTeacherV2Service {
   public integrativeTeachers(): Observable<Array<IntegrativeTeacherV2>> {
     return this.integrativeTeachersCollection().valueChanges();
   }
+
+  /**
+   * Get Integrative Teachers of a period
+   * @param periodId Identifier of the period
+   */
+  public getIntegrativeTeachersOfPeriod(periodId: string): Observable<Array<IntegrativeTeacherV2>> {
+    const periodReference = this.academicPeriodsService.periodReference(periodId);
+    return this.angularFirestore.collection<IntegrativeTeacherV2>(
+      INTEGRATIVE_TEACHERS_COLLECTION_NAME,
+      query => {
+        return query.orderBy('displayName')
+          .where('period.reference', '==', periodReference);
+      }
+    )
+      .valueChanges()
+      .pipe(
+        mergeMap(async doc => {
+          await this.angularFirePerformance.trace('list-teachers-of-period');
+          return doc;
+        }),
+        shareReplay(1)
+      );
+  }
+
 }

@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class="container-fluid mt-3">
 
   <!--  info icon-->
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -18,14 +18,14 @@
   </div>
 </div>
 
-<div class="container mt-3">
+<div class="container-fluid mt-3">
   <select class="form-select" aria-label="Default select example" (change)="changeFilter($event)">
     <option selected value="all">Todos</option>
     <option *ngFor="let faculty of faculties" [value]="faculty.id">{{ faculty.name | titlecase }}</option>
   </select>
 </div>
 
-<div class="container mt-3">
+<div class="container-fluid mt-3">
 
   <table class="table table-hover">
     <thead>
@@ -34,22 +34,25 @@
       <th scope="col">Nombres y apellidos</th>
       <th scope="col">Carrera</th>
       <th scope="col">Facultad</th>
-      <!--      TODO: Agregar modalidad a los docentes-->
-      <!--      <th scope="col">Modalidad</th>-->
+      <th scope="col">Modalidad</th>
       <th scope="col">Ciclo</th>
-      <th scope="col">Planificación</th>
+      <th scope="col">Estado de la planificación</th>
+      <th scope="col">Acción</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let teacher of filteredTeachers; let i = index">
+    <tr *ngFor="let teacher of teachersWithPlanningFiltered; let i = index">
       <th scope="row">{{ i + 1 | number }}</th>
       <td>{{ teacher.displayName | titlecase }}</td>
       <td>{{ teacher.degree.name | titlecase }}</td>
       <td>{{ teacher.faculty.name | titlecase }}</td>
+      <td>{{ teacher.modality | titlecase }}</td>
       <td>{{ teacher.cycle }}</td>
+      <td *ngIf="teacher.planningStatus === 'completa'"><small><span class="badge bg-success"> {{ teacher.planningStatus | uppercase }} </span></small></td>
+      <td *ngIf="teacher.planningStatus === 'incompleta'"><small><span class="badge bg-danger"> {{ teacher.planningStatus | uppercase }} </span></small></td>
       <td class="align-content-center">
-        <a [routerLink]="[teacher.id]" type="button" class="btn">
-          Ver actividades <i-feather class="fas" name="chevron-right"></i-feather>
+        <a [routerLink]="[teacher.planningId]" type="button" class="btn">
+          Ver planificación <i-feather class="fas" name="chevron-right"></i-feather>
         </a>
       </td>
     </tr>
