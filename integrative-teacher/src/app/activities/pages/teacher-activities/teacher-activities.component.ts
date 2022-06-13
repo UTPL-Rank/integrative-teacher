@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityService } from '../../../core/services/activity.service';
-import { Subscription } from 'rxjs';
 import { Activity } from '../../../models/activity';
 import { ActivatedRoute, Params } from '@angular/router';
+import { PlanningService } from '../../../core/services/planning.service';
+import { Planning } from '../../../models/planning';
 
 
 @Component({
@@ -12,24 +13,36 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class TeacherActivitiesComponent implements OnInit {
 
-  public activities!: Array<Activity>;
-  public teacherUsername!: string;
-
-  private activitySubscription: Subscription | null = null;
+  public activities: Activity[][] = [];
+  public plannings: Planning[] = [];
+  public teacherId!: string;
 
   constructor(
     private activityService: ActivityService,
+    private planningService: PlanningService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
 
     this.route.params.subscribe((params: Params) => {
-      this.teacherUsername = params.teacherId;
-      this.activitySubscription = this.activityService.getActivitiesOfPlanning(this.teacherUsername)
-        .subscribe(activities => {
-          this.activities = activities;
-        });
+      this.teacherId = params.teacherId;
+
+      this.planningService.getPlanningsOfTeacher(this.teacherId).subscribe(
+        plannings => {
+          this.plannings = plannings;
+          this.plannings.map(
+            planning => {
+              if (planning.id) {
+                this.activityService.getActivitiesOfPlanning(planning.id)
+                  .subscribe(activities => {
+                    this.activities.push(activities);
+                  });
+              }
+            }
+          );
+        }
+      );
     });
   }
 

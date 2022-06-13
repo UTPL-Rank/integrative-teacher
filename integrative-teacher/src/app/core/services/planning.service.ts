@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFirePerformance } from '@angular/fire/performance';
-import {from, Observable, of} from 'rxjs';
-import {catchError, map, mergeMap, shareReplay} from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, shareReplay } from 'rxjs/operators';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
-import { IntegrativeTeacher } from '../../models/integrative-teacher';
 import { Planning } from '../../models/planning';
 import { AcademicPeriodsService } from './academic-period.service';
 

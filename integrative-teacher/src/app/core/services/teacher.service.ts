@@ -46,17 +46,6 @@ export class TeacherService {
     return teacherCreated;
   }
 
-  // private async createTeacher2(teacher: ATeacher): Promise<ATeacher> {
-  //   const teacherCreated: ATeacher =  {
-  //     id: teacher.id,
-  //     planningId: teacher.planningId,
-  //     integrativeTeacher: teacher.integrativeTeacher,
-  //     displayName: teacher.displayName,
-  //     subject: teacher.subject
-  //   };
-  //   return teacherCreated;
-  // }
-
   private async saveInDB(teacher: ATeacher): Promise<ATeacher> {
 
     const batch = this.angularFirestore.firestore.batch();
@@ -67,26 +56,9 @@ export class TeacherService {
     return teacher;
   }
 
-  // private async saveInDB2(teacher: ATeacher): Promise<ATeacher> {
-  //
-  //   const batch = this.angularFirestore.firestore.batch();
-  //   const teacherReference = this.teachersReference2.doc(`${teacher.id}`).ref;
-  //   batch.set(teacherReference, teacher);
-  //   await batch.commit();
-  //
-  //   return teacher;
-  // }
-
   setTeacher(teacher: ATeacher): Promise<any> {
     return this.teachersReference.doc(teacher.id).set(teacher);
   }
-
-  // updateTeacher(teacher: ATeacher): Promise<any> {
-  //   return this.teachersReference.doc(teacher.id).update({
-  //     displayName: teacher.displayName,
-  //     subject: teacher.subject
-  //   });
-  // }
 
   updateTeacher(teacher: ATeacher): Promise<any> {
     return this.teachersReference.doc(teacher.id).update(teacher);
@@ -94,29 +66,6 @@ export class TeacherService {
 
   deleteTeacher(id: string | undefined): Promise<any> {
     return this.teachersReference.doc(id).delete();
-  }
-
-  /**
-   * Get Teachers Of A IntegrativeTeacher
-   * @param integrativeTeacherId Id of the integrative teacher
-   * @deprecated Use getTeachersOfPlanning instead.
-   */
-  public getTeachersOfAIntegrativeTeacher(integrativeTeacherId: string): Observable<Array<ATeacher>> {
-    return this.angularFirestore.collection<ATeacher>(
-      TEACHERS_COLLECTION_NAME,
-      query => {
-        return query.orderBy('displayName')
-          .where('integrativeTeacher', '==', integrativeTeacherId);
-      }
-    )
-      .valueChanges()
-      .pipe(
-        mergeMap(async doc => {
-          await this.angularFirePerformance.trace('list-teachers-of-a-integrative');
-          return doc;
-        }),
-        shareReplay(1)
-      );
   }
 
   /**
