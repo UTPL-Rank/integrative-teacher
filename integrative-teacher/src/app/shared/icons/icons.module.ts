@@ -27,7 +27,8 @@ import {
   ChevronRight,
   Trello,
   Award,
-  Bookmark
+  Bookmark,
+  LogOut
 } from 'angular-feather/icons';
 
 // Check all icons available: https://feathericons.com/
@@ -60,7 +61,8 @@ const icons = {
   ChevronRight,
   Trello,
   Award,
-  Bookmark
+  Bookmark,
+  LogOut
 };
 
 @NgModule({
