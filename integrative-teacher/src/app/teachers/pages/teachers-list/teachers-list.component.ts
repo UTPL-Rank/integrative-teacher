@@ -37,6 +37,9 @@ export class TeachersListComponent implements OnInit {
       currents => {
         this.academicPeriod = currents[0];
 
+        this.teachersWithPlanning = [];
+        this.teachersWithPlanningFiltered = [];
+
         this.integrativeTeacherService.getIntegrativeTeachersOfPeriod(this.academicPeriod.id).subscribe(
           teachers => {
             this.teachers = teachers;

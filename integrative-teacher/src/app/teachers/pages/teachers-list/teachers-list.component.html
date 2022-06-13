@@ -51,7 +51,7 @@
       <td *ngIf="teacher.planningStatus === 'completa'"><small><span class="badge bg-success"> {{ teacher.planningStatus | uppercase }} </span></small></td>
       <td *ngIf="teacher.planningStatus === 'incompleta'"><small><span class="badge bg-danger"> {{ teacher.planningStatus | uppercase }} </span></small></td>
       <td class="align-content-center">
-        <a [routerLink]="[teacher.planningId]" type="button" class="btn">
+        <a [routerLink]="[teacher.integrativeTeacherId, teacher.planningId]" type="button" class="btn">
           Ver planificación <i-feather class="fas" name="chevron-right"></i-feather>
         </a>
       </td>
