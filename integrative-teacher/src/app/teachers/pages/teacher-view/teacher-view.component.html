@@ -1,1 +1,133 @@
-<p>teacher-view works!</p>
+  <!-- header  -->
+  <div class="container-fluid card mt-3 pt-3">
+
+    <div class="row justify-content-md-center">
+      <div class="col-md-auto">
+        <img src="assets/images/logo_vicerrectorado_academico.jpg" class="img-fluid logo">
+      </div>
+    </div>
+
+    <div class="row card-body">
+      <h6 class="section-title" align="center"><small><b> {{ 'Planificación del Docente Integrador' | uppercase }} </b></small></h6>
+      <h6 class="section-title" align="center"><small> MODALIDAD {{ planning?.modality! | uppercase }} </small></h6>
+    </div>
+
+    <div class="col-md-offset-1 col-sm-12">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page">Datos del Docente Integrador</a>
+        </li>
+      </ul>
+      <table class="table table-hover">
+        <tbody>
+        <tr>
+          <th scope="row">Docente Integrador</th>
+          <td> {{ integrativeTeacher?.displayName! | titlecase }} </td>
+        </tr>
+        <tr>
+          <th scope="row">Facultad</th>
+          <td> {{ planning?.faculty?.name! | titlecase }} </td>
+        </tr>
+        <tr>
+          <th scope="row">Carrera</th>
+          <td> {{ planning?.degree?.name! | titlecase }} </td>
+        </tr>
+        <tr>
+          <th scope="row">Periodo Académico</th>
+          <td> {{ integrativeTeacher?.period?.name }} </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!--teachers-->
+  <div class="container-fluid card mt-3 pt-3 pb-3">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Datos de los docentes de {{ planning?.cycle! }}º Ciclo</a>
+      </li>
+    </ul>
+
+    <ng-container *ngIf="teachers!.length > 0 else teachersIsEmpty">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Nombre del Docente</th>
+          <th scope="col">Materia</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let teacher of teachers">
+          <td> {{ teacher.displayName | titlecase}} </td>
+          <td> {{ teacher.subject | titlecase}} </td>
+        </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <ng-template #teachersIsEmpty>
+      <br><br>
+      <div class="card card-body text-center alert alert-info">
+        <p><i>Aún no has agregado ningún docente</i></p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!--activities-->
+  <div class="container-fluid card mt-3 pt-3 pb-3 mb-3">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Actividades</a>
+      </li>
+    </ul>
+
+    <ng-container *ngIf="activities!.length > 0 else activitiesIsEmpty">
+      <div class="col-md-offset-1 col-sm-12">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Actividad</th>
+              <th scope="col">Objetivo Actividad</th>
+              <th scope="col">Fecha Inicio</th>
+              <th scope="col">Fecha Fin</th>
+              <th scope="col">Evidencia a Entregar</th>
+              <th scope="col">Indicador de Medición</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Detalle de la actividad</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let activity of activities; let i = index;">
+              <td> {{ activity.description }} </td>
+              <td> {{ activity.goal }} </td>
+              <td> {{ activity.startDate }} </td>
+              <td> {{ activity.endDate }} </td>
+              <td> {{ activity.evidence }} </td>
+              <td> {{ activity.indicator }} </td>
+              <td *ngIf="activity.status === 'realizada'"><small><span class="badge bg-success"> {{ activity.status | uppercase }} </span></small></td>
+              <td *ngIf="activity.status === 'planificada'"><small><span class="badge bg-info"> {{ activity.status | uppercase }} </span></small></td>
+              <td *ngIf="activity.status === 'restrasada'"><small><span class="badge bg-danger"> {{ activity.status | uppercase }} </span></small></td>
+              <td>
+                <a [routerLink]="[activity.id, i+1]" type="button" class="btn">
+                  <i-feather class="fas" name="chevron-right">Ver</i-feather>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #activitiesIsEmpty>
+      <br><br>
+      <div class="card card-body text-center alert alert-info">
+        <p><i>Aún no has agregado ninguna actividad</i></p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- TODO: Get signature when the component starts -->
+

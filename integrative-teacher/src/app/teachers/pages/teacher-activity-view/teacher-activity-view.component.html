@@ -1,0 +1,141 @@
+<div class="container pt-3 pb-3">
+
+  <div class="pb-3">
+    <a [routerLink]="['/dashboard/teachers', integrativeTeacherId, planningId]">
+      <i-feather
+        class="fas download"
+        name="chevron-left"
+        type="button"
+        title="Volver a la planificación">
+      </i-feather>
+    </a>
+  </div>
+
+  <!-- activity information -->
+
+  <div class="col-md-offset-1 col-sm-12">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Detalle de la actividad {{ activityNumber }}</a>
+      </li>
+    </ul>
+    <table class="table table-hover">
+      <tbody>
+      <tr>
+        <th scope="row">Actividad</th>
+        <td> {{ activity?.description }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Objetivo de la actividad</th>
+        <td> {{ activity?.goal }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Fecha de inicio</th>
+        <td> {{ activity?.startDate }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Fecha de fin</th>
+        <td> {{ activity?.endDate }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Evidencia a entregar</th>
+        <td> {{ activity?.evidence }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Indicador de medición</th>
+        <td> {{ activity?.indicator }} </td>
+      </tr>
+      <tr>
+        <th scope="row">Estado</th>
+        <td> {{ activity?.status! | titlecase }} </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Evidence -->
+
+  <div class="col-md-offset-1 col-sm-12">
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Evidencia de la actividad</a>
+      </li>
+    </ul>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 pt-3 pb-3">
+
+      <ng-container *ngIf="deliverables.length > 0 else deliverablesIsEmpty">
+        <ng-container *ngFor="let deliverable of deliverables">
+          <div class="col">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-3">
+                    <span
+                      [class]="'fiv-viv fiv-size-lg fiv-icon-'
+                      + deliverable.filename!.split('.')[deliverable.filename!.split('.').length-1]"
+                      data-bs-toggle="modal"
+                      [attr.data-bs-target]="'#fileViewModal'+deliverable.id"
+                      type="button"
+                      title="Ver documento"
+                    >
+                    </span>
+                  </div>
+                  <div class="col">
+                    <small>
+                      {{ deliverable.filename }}
+                    </small>
+
+                    <!-- Modal -->
+
+                    <ng-container>
+                      <div class="modal fade" [id]="'fileViewModal'+deliverable.id" tabindex="-1"
+                           aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-fullscreen">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title"> {{ deliverable.filename }} </h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Subido en {{ deliverable.createdAt?.toDate() | date: 'MMMM d, y'}} </p>
+                              <ngx-doc-viewer [url]="deliverable.url!" viewer="url"
+                                              style="width:100%;height:90%;"></ngx-doc-viewer>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                  </div>
+
+                  <div class="col-2">
+                    <a [href]="deliverable.url" target=”_blank”>
+                      <i-feather class="fas download" name="download"
+                                 type="button"
+                                 title="Descargar documento"
+                      >
+                      </i-feather>
+                    </a>
+                  </div>
+
+                </div>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted"> {{ deliverable.createdAt?.toDate() | date: 'MMMM d, y'}} </small>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #deliverablesIsEmpty>
+        <div class="card card-body text-center alert alert-info ms-3 me-3 align-content-center">
+          <small class="mt-1"><i>Aún no has agregado ningún documento</i></small>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

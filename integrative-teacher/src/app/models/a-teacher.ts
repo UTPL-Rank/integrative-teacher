@@ -3,4 +3,5 @@ export interface ATeacher {
   displayName: string;
   subject: string;
   integrativeTeacher: string;
+  planningId?: string;
 }

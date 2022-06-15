@@ -7,16 +7,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SigCanvasComponent } from '../../../shared/components/sig-canvas/sig-canvas.component';
 import Swal from 'sweetalert2';
 import { IntegrativeTeacherService } from '../../../core/services/integrative-teacher.service';
-import { IntegrativeTeacher } from '../../../models/integrative-teacher';
+import { IntegrativeTeacherV2 } from '../../../models/integrative-teacher';
 import { UserService } from '../../../core/services/user.service';
 import { IntegrativeUser } from '../../../models/integrative-user';
 import { ActivatedRoute, Params } from '@angular/router';
+import { PlanningService } from '../../../core/services/planning.service';
+import { IntegrativeTeacherV2Service } from '../../../core/services/integrative-teacher-v2.service';
+import { Planning } from '../../../models/planning';
 
 // @ts-ignore
 import Html2Pdf from 'js-html2pdf';
 
 @Component({
-  selector: 'app-plannig-form',
+  selector: 'app-planning-form',
   templateUrl: './planning-form.component.html',
   styleUrls: ['./planning-form.component.scss']
 })
@@ -28,24 +31,25 @@ export class PlanningFormComponent implements OnInit {
   public teacherIsValid!: boolean;
   public activityIsValid!: boolean;
 
-  public integrativeTeacher!: IntegrativeTeacher;
+  public integrativeTeacher!: IntegrativeTeacherV2;
+  public planning!: Planning;
   public teachers: Array<ATeacher> = [];
   public activities: Array<Activity> = [];
-  public currentUser!: IntegrativeUser | null;
 
   private editTeacherId!: string | undefined;
   private editActivityId!: string | undefined;
   private integrativeTeacherId!: string;
+  private planningId!: string;
 
   teacherForm: FormGroup;
   activityForm: FormGroup;
-
-  public teacherNameAndJob = '';
 
   constructor(
     private integrativeTeacherService: IntegrativeTeacherService,
     private teacherService: TeacherService,
     private activityService: ActivityService,
+    private planningService: PlanningService,
+    private integrativeTeacherV2Service: IntegrativeTeacherV2Service,
     private userService: UserService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
@@ -82,27 +86,26 @@ export class PlanningFormComponent implements OnInit {
 
     this.route.params.subscribe((params: Params) => {
       this.integrativeTeacherId = params.integrativeTeacherId;
+      this.planningId = params.planningId;
 
-      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId).
+      this.integrativeTeacherV2Service.integrativeTeacherById(this.integrativeTeacherId).
         subscribe(
           integrativeTeacher => this.integrativeTeacher = integrativeTeacher
       );
 
-      this.teacherService.getTeachersOfAIntegrativeTeacher(this.integrativeTeacherId)
+      this.planningService.planningById(this.planningId).subscribe(
+        planning => this.planning = planning
+      );
+
+      this.teacherService.getTeachersOfPlanning(this.planningId)
         .subscribe(teachers => {
           this.teachers = teachers;
         });
 
-      this.activityService.getActivitiesOfATeacher(this.integrativeTeacherId)
+      this.activityService.getActivitiesOfPlanning(this.planningId)
         .subscribe(activities => {
           this.activities = activities;
         });
-
-      this.integrativeTeacherService.integrativeTeacherById(this.integrativeTeacherId)
-        .subscribe(integrativeTeacher => {
-            this.integrativeTeacher = integrativeTeacher;
-          }
-        );
     });
   }
 
@@ -116,8 +119,8 @@ export class PlanningFormComponent implements OnInit {
 
   changeCompletedPlanning(e: any): void {
     if (e.target.checked) {
-      this.integrativeTeacher.planningStatus = 'completa';
-      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+      this.planning.planningStatus = 'completa';
+      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
         .then(
           success => {
             Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
@@ -127,8 +130,8 @@ export class PlanningFormComponent implements OnInit {
           }
       );
     } else {
-      this.integrativeTeacher.planningStatus = 'incompleta';
-      this.integrativeTeacherService.updatePlanningStatus(this.integrativeTeacherId, this.integrativeTeacher.planningStatus)
+      this.planning.planningStatus = 'incompleta';
+      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
         .then(
           success => {
             Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();
@@ -145,7 +148,8 @@ export class PlanningFormComponent implements OnInit {
     const newTeacher: ATeacher = {
       displayName: this.teacherForm.value.name,
       subject: this.teacherForm.value.subject,
-      integrativeTeacher: this.integrativeTeacherId
+      integrativeTeacher: this.integrativeTeacherId,
+      planningId: this.planningId
     };
 
     if (!this.editATeacher) {
@@ -183,7 +187,8 @@ export class PlanningFormComponent implements OnInit {
       endDate: this.activityForm.value.endDate,
       evidence: this.activityForm.value.evidence,
       indicator: this.activityForm.value.indicator,
-      integrativeTeacher: this.integrativeTeacherId
+      integrativeTeacher: this.integrativeTeacherId,
+      planningId: this.planningId
     };
 
     if (!this.editAnActivity) {
@@ -265,7 +270,7 @@ export class PlanningFormComponent implements OnInit {
   exportToPDF(): void {
 
     this.cleanSignatureBtn.nativeElement.remove();
-    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.integrativeTeacher.degree.name.toUpperCase()}</b></p>`);
+    this.d1?.nativeElement.insertAdjacentHTML('beforeend', `<p>${this.integrativeTeacher.displayName.toUpperCase() }<br><b>DOCENTE INTEGRADOR DE ${this.planning.degree!.name.toUpperCase()}</b></p>`);
 
     // Define optional configuration
     const options = {

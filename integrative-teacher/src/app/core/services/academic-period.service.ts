@@ -5,6 +5,9 @@ import { Observable } from 'rxjs';
 import {map, mergeMap, shareReplay, take} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { BrowserLoggerService } from './browser-logger.service';
+import firebase from 'firebase';
+import firestore = firebase.firestore;
+
 
 const PERIODS_COLLECTION_NAME = 'academic-periods';
 
@@ -66,6 +69,10 @@ export class AcademicPeriodsService {
    */
   public periodDocument(periodId: string): AngularFirestoreDocument<AcademicPeriod> {
     return this.periodsCollection().doc<AcademicPeriod>(periodId);
+  }
+
+  public periodReference(periodId: string): firestore.DocumentReference<AcademicPeriod> {
+    return this.periodDocument(periodId).ref as firestore.DocumentReference<AcademicPeriod>;
   }
 
   /**

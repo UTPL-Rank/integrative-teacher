@@ -19,7 +19,7 @@ const routes: Routes = [
       {
         path: 'documents',
         loadChildren: () => import('../documents/documents.module').then(m => m.DocumentsModule),
-        canActivate: [IsTeacherGuard]
+        canActivate: []
       },
       {
         path: 'planning',

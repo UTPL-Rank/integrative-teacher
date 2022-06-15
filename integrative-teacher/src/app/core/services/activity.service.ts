@@ -8,7 +8,7 @@ import { Activity } from '../../models/activity';
 import firebase from 'firebase';
 import firestore = firebase.firestore;
 
-const ACTIVITIES_COLLECTION_NAME = 'activities';
+const ACTIVITIES_COLLECTION_NAME = 'activities-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,8 @@ export class ActivityService {
       endDate: activity.endDate,
       evidence: activity.evidence,
       indicator: activity.indicator,
-      status: 'planificada'
+      status: 'planificada',
+      planningId: activity.planningId
     };
     return activityCreated;
   }
@@ -99,22 +100,62 @@ export class ActivityService {
     return this.activitiesReference.doc(id).delete();
   }
 
-  public getActivitiesOfATeacher(username: string): Observable<Array<Activity>> {
+  /**
+   * Get the activities of a integrative teacher.
+   * @deprecated Use getActivitiesOfPlanning instead.
+   * @param integrativeTeacherId The id of the integrative teacher.
+   */
+  // public getActivitiesOfATeacher(integrativeTeacherId: string): Observable<Array<Activity>> {
+  //   return this.angularFirestore.collection<Activity>(
+  //     ACTIVITIES_COLLECTION_NAME,
+  //     query => {
+  //       return query.orderBy('createdAt')
+  //         .where('integrativeTeacher', '==', integrativeTeacherId);
+  //     }
+  //   )
+  //     .valueChanges()
+  //     .pipe(
+  //       mergeMap(async doc => {
+  //         await this.angularFirePerformance.trace('list-activities-of-a-teacher');
+  //         return doc;
+  //       }),
+  //       shareReplay(1)
+  //     );
+  // }
+
+  /**
+   * Get the activities of a planning.
+   * @param planningId The id of the planning.
+   */
+  public getActivitiesOfPlanning(planningId: string): Observable<Array<Activity>> {
     return this.angularFirestore.collection<Activity>(
       ACTIVITIES_COLLECTION_NAME,
       query => {
-        // const teacherReference = this.userService.userDocument(username).ref;
         return query.orderBy('createdAt')
-          .where('integrativeTeacher', '==', username);
+          .where('planningId', '==', planningId);
       }
     )
       .valueChanges()
       .pipe(
         mergeMap(async doc => {
-          await this.angularFirePerformance.trace('list-activities-of-a-teacher');
+          await this.angularFirePerformance.trace('list-activities-of-planning');
           return doc;
         }),
         shareReplay(1)
       );
+  }
+
+  /**
+   * Get activities collection
+   */
+  public activitiesCollection(): AngularFirestoreCollection<Activity> {
+    return this.angularFirestore.collection<Activity>(ACTIVITIES_COLLECTION_NAME);
+  }
+
+  /**
+   * Get all activities
+   */
+  public allActivities(): Observable<Array<Activity>> {
+    return this.activitiesCollection().valueChanges();
   }
 }

@@ -3,12 +3,10 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { AngularFirePerformance } from '@angular/fire/performance';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { from, Observable, of } from 'rxjs';
-
 import { catchError, mergeMap, shareReplay} from 'rxjs/operators';
-
 import { ATeacher } from '../../models/a-teacher';
 
-const TEACHERS_COLLECTION_NAME = 'teachers';
+const TEACHERS_COLLECTION_NAME = 'teachers-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -37,13 +35,13 @@ export class TeacherService {
     return saveProcess;
   }
 
-
   private async createTeacher(teacher: ATeacher): Promise<ATeacher> {
     const teacherCreated: ATeacher =  {
       id: `${ (new Date()).valueOf() }`, // Date Integer
       integrativeTeacher: teacher.integrativeTeacher,
       displayName: teacher.displayName,
-      subject: teacher.subject
+      subject: teacher.subject,
+      planningId: teacher.planningId
     };
     return teacherCreated;
   }
@@ -63,32 +61,47 @@ export class TeacherService {
   }
 
   updateTeacher(teacher: ATeacher): Promise<any> {
-    return this.teachersReference.doc(teacher.id).update({
-      displayName: teacher.displayName,
-      subject: teacher.subject
-    });
+    return this.teachersReference.doc(teacher.id).update(teacher);
   }
 
   deleteTeacher(id: string | undefined): Promise<any> {
     return this.teachersReference.doc(id).delete();
   }
 
-  public getTeachersOfAIntegrativeTeacher(username: string): Observable<Array<ATeacher>> {
+  /**
+   * Get Teachers Of A Planning
+   * @param planningId The id of the planning
+   */
+  public getTeachersOfPlanning(planningId: string): Observable<Array<ATeacher>> {
     return this.angularFirestore.collection<ATeacher>(
       TEACHERS_COLLECTION_NAME,
       query => {
         return query.orderBy('displayName')
-          .where('integrativeTeacher', '==', username);
+          .where('planningId', '==', planningId);
       }
     )
       .valueChanges()
       .pipe(
         mergeMap(async doc => {
-          await this.angularFirePerformance.trace('list-teachers-of-a-integrative');
+          await this.angularFirePerformance.trace('list-teachers-of-planning');
           return doc;
         }),
         shareReplay(1)
       );
+  }
+
+  /**
+   * Get activities collection
+   */
+  public teachersCollection(): AngularFirestoreCollection<ATeacher> {
+    return this.angularFirestore.collection<ATeacher>(TEACHERS_COLLECTION_NAME);
+  }
+
+  /**
+   * Get all activities
+   */
+  public allTeachers(): Observable<Array<ATeacher>> {
+    return this.teachersCollection().valueChanges();
   }
 
 }

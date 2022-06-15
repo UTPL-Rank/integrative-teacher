@@ -1,10 +1,8 @@
 import {DocumentReference} from '@angular/fire/firestore';
 
-/**
- * @deprecated Do not use. Use IntegrativeTeacherV2
- */
-export interface IntegrativeTeacher {
-  id: string;
+export interface IntegrativeTeacherWithPlanning {
+  planningId: string;
+  integrativeTeacherId: string;
   email: string;
   displayName: string;
   degree: {
@@ -21,14 +19,5 @@ export interface IntegrativeTeacher {
     reference: DocumentReference;
     name: string;
   };
-}
-
-export interface IntegrativeTeacherV2 {
-  id?: string;
-  email: string;
-  displayName: string;
-  period: {
-    reference: DocumentReference;
-    name: string;
-  };
+  modality: string;
 }

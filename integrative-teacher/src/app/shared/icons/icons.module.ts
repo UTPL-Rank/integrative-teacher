@@ -24,9 +24,11 @@ import {
   Delete,
   ExternalLink,
   Trash2,
+  ChevronRight,
   Trello,
   Award,
-  Bookmark
+  Bookmark,
+  LogOut
 } from 'angular-feather/icons';
 
 // Check all icons available: https://feathericons.com/
@@ -56,9 +58,11 @@ const icons = {
   Delete,
   ExternalLink,
   Trash2,
+  ChevronRight,
   Trello,
   Award,
-  Bookmark
+  Bookmark,
+  LogOut
 };
 
 @NgModule({

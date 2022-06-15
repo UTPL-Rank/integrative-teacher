@@ -1,0 +1,26 @@
+<div class="container my-4">
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col" *ngFor="let planning of plannings; let i = index;">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <a [routerLink]="[planning.id]">
+              <img [src]="images[i]" class="img-fluid rounded-start" [alt]="planning.degree.name | titlecase">
+            </a>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">
+                <a [routerLink]="[planning.id]" class="text-decoration-none">
+                  {{ planning.degree.name | titlecase }}
+                </a>
+              </h5>
+              <p class="card-text"> {{ planning.faculty.name | titlecase }} </p>
+              <p class="card-text"><small class="text-muted"> {{ planning.modality | uppercase }} </small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
