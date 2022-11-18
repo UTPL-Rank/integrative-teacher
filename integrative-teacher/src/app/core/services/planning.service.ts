@@ -8,7 +8,7 @@ import firestore = firebase.firestore;
 import { Planning } from '../../models/planning';
 import { AcademicPeriodsService } from './academic-period.service';
 
-const PLANNING_COLLECTION_NAME = 'planning';
+const PLANNING_COLLECTION_NAME = 'planning-v2';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,7 @@ export class PlanningService {
   public savePlanning(planning: Planning): Observable<Planning | null> {
     const saveProcess = from(this.createPlanning(planning)).pipe(
       mergeMap(async (acc) => await this.saveInDB(acc)),
+      
       catchError((err) => {
         console.log('Error saving teacher: ', err);
         return of(null);
@@ -37,6 +38,7 @@ export class PlanningService {
     // criterio para crear ID de planning
     // `${it.period.reference.id}-${it.degree.reference.id}-${it.email.split('@')[0]}-${it.cycle}`
 
+    
     const planningCreated: Planning =  {
       id: planning.id,
       integrativeTeacherId: planning.integrativeTeacherId,
@@ -51,6 +53,7 @@ export class PlanningService {
 
   private async saveInDB(planning: Planning): Promise<Planning> {
 
+    
     const batch = this.angularFirestore.firestore.batch();
     const planningReference = this.planningReference(`${planning.id}`);
     batch.set(planningReference, planning);
@@ -65,6 +68,7 @@ export class PlanningService {
    * @param planningStatus status to update
    */
   public async updatePlanningStatus(planningId: string, planningStatus: string): Promise<void> {
+    console.log(planningStatus, planningId);
     return await this.planningReference(planningId).set(
       { planningStatus },
       { merge: true }
@@ -90,7 +94,7 @@ export class PlanningService {
           await this.angularFirePerformance.trace('list-plannings-of-a-teacher');
           return doc;
         }),
-        shareReplay(1)
+         shareReplay(1)
       );
   }
 
@@ -99,6 +103,7 @@ export class PlanningService {
    * @param planningId Identifier of the planning
    */
   private planningDocument(planningId: string): AngularFirestoreDocument<Planning> {
+    
     return this.angularFirestore
       .collection(PLANNING_COLLECTION_NAME)
       .doc<Planning>(planningId);
@@ -108,7 +113,7 @@ export class PlanningService {
    * Get the document reference of a planning
    * @param planningId Identifier of the planning
    */
-  public planningReference(planningId: string): firestore.DocumentReference<Planning> {
+  public planningReference(planningId: string): firestore.DocumentReference<Planning> {    
     return this.planningDocument(planningId).ref as firestore.DocumentReference<Planning>;
   }
 

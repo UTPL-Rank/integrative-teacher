@@ -13,6 +13,9 @@ import { UserClaims } from '../../models/user-claims';
 
 // services
 import { UserService } from './user.service';
+import { TeacherService } from './teacher.service';
+import { IntegrativeTeacherService } from './integrative-teacher.service';
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -25,14 +28,22 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
     //   integrativeTeacherId: ''
     // };
 
+    
+
     constructor(
         private router: Router,
         private readonly afAuth: AngularFireAuth,
         private readonly eventLog: AngularFireAnalytics,
         private userService: UserService,
+        private integrativeTeacherservice : IntegrativeTeacherService
+        
     ) {
         super();
     }
+
+    
+   
+  
 
     async signIn(options?: MicrosoftSignInOptions): Promise<void> {
 
@@ -84,22 +95,25 @@ export class MicrosoftSignInService extends SignIn<MicrosoftSignInOptions> {
                 };
 
                 console.log(newUser);
-
+                
                 // TODO: el usuario se debe crear cuando se carga desde upload
+
+                
 
                 await this.userService.userDocument(username).set(newUser);
 
                 let isTeacher = false;
 
                 // @ts-ignore
-                if (additionalUserInfo.profile.jobTitle !== null) {
+                if (additionalUserInfo.profile.jobTitle !== null ) {
                     isTeacher = true;
                 }
 
                 const userClaims: UserClaims = {
                     isTeacher,
                     isAdmin: false,
-                    integrativeTeacherId: `abr22-ago22-${username}`
+                    /* integrativeTeacherId: `abr22-ago22-${username}` */
+                    integrativeTeacherId: `oct22-feb23-${username}`
                 };
                 await this.userService.claimsDocument(username).set(userClaims);
               }

@@ -39,7 +39,9 @@ export class UserService {
   );
 
   public readonly uid$ = this.user$.pipe(
+    
     map(user => user?.uid ?? null)
+    
   );
 
   public readonly signature$: Observable<UserSignature | null> = this.username$.pipe(

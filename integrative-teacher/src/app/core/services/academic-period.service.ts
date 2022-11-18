@@ -23,6 +23,7 @@ export class AcademicPeriodsService {
     private readonly logger: BrowserLoggerService
   ) { }
 
+
   /**
    * Academic periods loaded by the service
    */
@@ -50,9 +51,10 @@ export class AcademicPeriodsService {
   /**
    * Current period
    */
-  public current(): Observable<AcademicPeriod[]> {
+  public current(): Observable<AcademicPeriod[]>  {
     // TODO: Improve this function (Return only the current period)
-    return this.angularFirestore.collection<AcademicPeriod>(PERIODS_COLLECTION_NAME).valueChanges({ current: true });
+    return this.angularFirestore.collection<AcademicPeriod>(PERIODS_COLLECTION_NAME).valueChanges({current : true});
+
   }
 
   /**

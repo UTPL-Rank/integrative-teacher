@@ -13,6 +13,7 @@ import { UserService } from '../../../core/services/user.service';
 export class DashboardTopbarComponent implements OnInit {
 
   public academicPeriod!: AcademicPeriod | null;
+  
   public user!: User;
 
   constructor(
@@ -22,8 +23,8 @@ export class DashboardTopbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.academicPeriodsService.current().subscribe(
-      periods => this.academicPeriod = periods[0]
-    );
+      periods => this.academicPeriod = periods.filter(periods => periods.current == true)[0]      
+      );      
   }
 
   signOut(): void {

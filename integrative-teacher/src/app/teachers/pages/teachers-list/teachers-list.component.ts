@@ -35,19 +35,21 @@ export class TeachersListComponent implements OnInit {
 
     this.academicPeriodsService.current().subscribe(
       currents => {
-        this.academicPeriod = currents[0];
+        this.academicPeriod = currents.filter(currents => currents.current == true)[0];
 
         this.teachersWithPlanning = [];
         this.teachersWithPlanningFiltered = [];
-
+        
         this.integrativeTeacherService.getIntegrativeTeachersOfPeriod(this.academicPeriod.id).subscribe(
           teachers => {
             this.teachers = teachers;
+            console.log(teachers);
             this.teachers.map(
               teacher => {
                 if (teacher.id){
                   this.planningService.getPlanningsOfTeacher(teacher.id).subscribe(
                     plannings => {
+                      console.log(plannings);
                       plannings.map(
                         planning => {
                           if (planning.id && teacher.id ) {

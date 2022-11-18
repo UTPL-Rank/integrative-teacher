@@ -4,7 +4,8 @@
   <code>Nombres y apellidos</code>;
   <code>Id de la carrera</code>;
   <code>Id de la facultad</code>;
-  <code>Ciclo</code>.
+  <code>Ciclo</code>;
+  <code>Modalidad</code>.
 </p>
 
 <div class="my-3">
@@ -22,6 +23,7 @@
         <th class="font-weight-bold text-muted small">Facultad</th>
         <th class="font-weight-bold text-muted small">Titulación</th>
         <th class="font-weight-bold text-muted small">Ciclo</th>
+        
       </tr>
       </thead>
       <tbody>
@@ -29,9 +31,10 @@
         <td class="font-weight-bold text-muted small">{{ idx + 1 }}</td>
         <td class="font-weight-bold text-muted small">{{ uploadTeacher.email | titlecase }}</td>
         <td class="font-weight-bold text-muted small">{{ uploadTeacher.displayName }}</td>
-        <td class="font-weight-bold text-muted small">{{ uploadTeacher.degree.name | titlecase }}</td>
         <td class="font-weight-bold text-muted small">{{ uploadTeacher.faculty.name | titlecase }}</td>
+        <td class="font-weight-bold text-muted small">{{ uploadTeacher.degree.name | titlecase }}</td>
         <td class="font-weight-bold text-muted small">{{ uploadTeacher.cycle | titlecase }}</td>
+        
       </tr>
       </tbody>
     </table>

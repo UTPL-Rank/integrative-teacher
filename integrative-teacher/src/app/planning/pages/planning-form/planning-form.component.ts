@@ -120,7 +120,8 @@ export class PlanningFormComponent implements OnInit {
   changeCompletedPlanning(e: any): void {
     if (e.target.checked) {
       this.planning.planningStatus = 'completa';
-      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
+      console.log(this.planningId, this.planning.planningStatus);
+      this.planningService.updatePlanningStatus(this.planningId, this.planning.planningStatus)
         .then(
           success => {
             Swal.fire({title: 'Planificación marcada como completada', icon: 'success'}).then();
@@ -131,7 +132,7 @@ export class PlanningFormComponent implements OnInit {
       );
     } else {
       this.planning.planningStatus = 'incompleta';
-      this.planningService.updatePlanningStatus(this.integrativeTeacherId, this.planning.planningStatus)
+      this.planningService.updatePlanningStatus(this.planningId, this.planning.planningStatus)
         .then(
           success => {
             Swal.fire({title: 'Planificación marcada como NO completada', icon: 'info'}).then();

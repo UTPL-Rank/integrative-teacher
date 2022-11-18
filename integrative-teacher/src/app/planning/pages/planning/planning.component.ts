@@ -27,6 +27,7 @@ export class PlanningComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.integrativeTeacherId = params.integrativeTeacherId;
+      console.log(this.integrativeTeacherId) ;
 
       this.planningService.getPlanningsOfTeacher(this.integrativeTeacherId).subscribe(
         plannings => this.plannings = plannings
