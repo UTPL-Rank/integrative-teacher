@@ -152,7 +152,7 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
     if (this.deliverables.length !== 0) {
       status = 'realizada';
     } else {
-      if (+new Date(this.activity.endDate) < +new Date()) {
+      if (new Date(this.activity.endDate) < new Date()) {
         status = 'no realizada';
       }
     }

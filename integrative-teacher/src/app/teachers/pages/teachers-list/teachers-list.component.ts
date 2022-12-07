@@ -65,8 +65,21 @@ export class TeachersListComponent implements OnInit {
                               period: teacher.period,
                               modality: planning.modality
                             };
-                            this.teachersWithPlanning.push(teacherWithPlanning);
-                            this.teachersWithPlanningFiltered.push(teacherWithPlanning);
+
+                            var flag = true;
+                            if(this.teachersWithPlanningFiltered.length == 0){
+                              this.teachersWithPlanning.push(teacherWithPlanning);
+                              this.teachersWithPlanningFiltered.push(teacherWithPlanning);
+                            }
+                            this.teachersWithPlanningFiltered.forEach(e => {
+                              if(this.equals(e, teacherWithPlanning)){
+                                flag = false;
+                              }
+                            });
+                            if(flag){
+                              this.teachersWithPlanning.push(teacherWithPlanning);
+                              this.teachersWithPlanningFiltered.push(teacherWithPlanning);
+                            }
                           }
                         }
                       );

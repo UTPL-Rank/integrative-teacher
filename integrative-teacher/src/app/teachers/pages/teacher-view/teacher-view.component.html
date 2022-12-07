@@ -108,7 +108,7 @@
               <td> {{ activity.indicator }} </td>
               <td *ngIf="activity.status === 'realizada'"><small><span class="badge bg-success"> {{ activity.status | uppercase }} </span></small></td>
               <td *ngIf="activity.status === 'planificada'"><small><span class="badge bg-info"> {{ activity.status | uppercase }} </span></small></td>
-              <td *ngIf="activity.status === 'restrasada'"><small><span class="badge bg-danger"> {{ activity.status | uppercase }} </span></small></td>
+              <td *ngIf="activity.status === 'no realizada'"><small><span class="badge bg-danger"> {{ activity.status | uppercase }} </span></small></td>
               <td>
                 <a [routerLink]="[activity.id, i+1]" type="button" class="btn">
                   <i-feather class="fas" name="chevron-right">Ver</i-feather>
