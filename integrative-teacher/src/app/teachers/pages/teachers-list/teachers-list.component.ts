@@ -36,20 +36,19 @@ export class TeachersListComponent implements OnInit {
     this.academicPeriodsService.current().subscribe(
       currents => {
         this.academicPeriod = currents.filter(currents => currents.current == true)[0];
-
         this.teachersWithPlanning = [];
         this.teachersWithPlanningFiltered = [];
-        
+
         this.integrativeTeacherService.getIntegrativeTeachersOfPeriod(this.academicPeriod.id).subscribe(
           teachers => {
+            this.teachersWithPlanning = [];
+            this.teachersWithPlanningFiltered = [];
             this.teachers = teachers;
-            console.log(teachers);
             this.teachers.map(
               teacher => {
                 if (teacher.id){
                   this.planningService.getPlanningsOfTeacher(teacher.id).subscribe(
                     plannings => {
-                      console.log(plannings);
                       plannings.map(
                         planning => {
                           if (planning.id && teacher.id ) {
@@ -66,17 +65,17 @@ export class TeachersListComponent implements OnInit {
                               modality: planning.modality
                             };
 
-                            var flag = true;
+                            var bandera = true;
                             if(this.teachersWithPlanningFiltered.length == 0){
                               this.teachersWithPlanning.push(teacherWithPlanning);
                               this.teachersWithPlanningFiltered.push(teacherWithPlanning);
                             }
                             this.teachersWithPlanningFiltered.forEach(e => {
                               if(this.equals(e, teacherWithPlanning)){
-                                flag = false;
+                                bandera = false;
                               }
                             });
-                            if(flag){
+                            if(bandera){
                               this.teachersWithPlanning.push(teacherWithPlanning);
                               this.teachersWithPlanningFiltered.push(teacherWithPlanning);
                             }
@@ -112,6 +111,11 @@ export class TeachersListComponent implements OnInit {
     } else {
       this.teachersWithPlanningFiltered = this.teachersWithPlanning;
     }
+  }
+
+  public equals(source: IntegrativeTeacherWithPlanning, target: IntegrativeTeacherWithPlanning): boolean {
+    return  source.planningId === target.planningId &&
+            source.integrativeTeacherId === target.integrativeTeacherId
   }
 
 }
