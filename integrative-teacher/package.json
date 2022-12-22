@@ -27,7 +27,7 @@
     "bootstrap": "^5.0.0-beta3",
     "feather-icons": "^4.28.0",
     "firebase": "^8.10.0",
-    "firebase-admin": "^9.11.0",
+    "firebase-admin": "^11.4.1",
     "html2pdf.js": "^0.9.3",
     "js-html2pdf": "^1.1.4",
     "ngx-doc-viewer": "^2.0.5",
